@@ -1,0 +1,56 @@
+\section{Definiciones básicas}
+
+Para diagramar el trabajo primero estableceremos las siguientes definiciones básicas:
+\begin{itemize}
+
+%\item Consulta (q): es una ni idea que poner
+
+\item Documento: conjunto de datos en formato estándar de texto (Unicode).
+
+\item Carpeta a indexar: es la que se le pasa al programa creado para que procese todos sus documentos, y permita hacer consultas sobre su contenido
+
+\item Colección: conjunto de todos los documentos que aparecen en la carpeta a indexar.
+
+\item Diccionario: conjunto de todos los términos.
+
+\end{itemize}
+
+
+%\subsection{Término (\textit{\textnormal{T}})}
+\subsection{Término (\textnormal{\itshape T})}
+
+ 
+Se considera término \textit{T} a todo conjunto de caracteres alfanumérico sumados al apóstrofo (o comilla simple: ' ). Cada término es, o bien, una cantidad numérica desde 1 (una) hasta una cantidad no definida de cifras, o bien palabras tanto simples como compuestas. Se desarrolla sobre este tema en la Sección \ref{sec:parser}.
+
+
+\subsection{docID (\textnormal{\itshape D})}
+\noindent (\textit{document identification} = identificador de documento)
+
+Este es un número asignado unívocamente a cada documento de la carpeta a indexar. Para hacer este proceso, se listan recursivamente todos los documentos (que se suponen \textit{indexables}, es decir, de texto plano) y se los ordena (el criterio será develado más adelante). Este orden otorga el docID de cada documento, que comienzan desde el 1 (uno).
+
+
+\subsection{d-gap}
+\noindent(\textit{document-gap} = distancia entre documentos)
+
+Considerando una lista de docIDs en orden ascendente, se puede almacenar la misma con el primer elemento seguido de las diferencias entre los elementos siguientes, los \textit{d-gaps}. Se utiliza la definición dada en \citet[p.~115]{WittenMoffatBell99}.
+
+Por ejemplo $\langle 1, 2, 4 , 5 , 8 \rangle$ se puede transformar en $\langle 1, 1, 2 , 1 , 3 \rangle$.
+
+
+
+%\citeauthor[p.~115]{WittenMoffatBell99}.
+
+%\subsection{Frecuencia absoluta (\textnormal{\itshape F \texorpdfstring{\textsubscript{F}})}}
+\subsection{Frecuencia absoluta (\texorpdfstring{$F_{T}$}{FF})}
+
+Cantidad de veces que aparece un término \textit{T} en toda la colección.
+
+
+%\subsection{Frecuencia relativa (\textnormal{\itshape f \texorpdfstring\textsubscript{D,T}})}
+\subsection{Frecuencia relativa (\texorpdfstring{$F_{D,T}$}{FFD})}
+
+Cantidad de veces que aparece un término \textit{T} en un documento \textit{D}.
+
+\subsection{Lista de posiciones}
+
+También llamada lista de ocurrencias. Es aquella que almacena las posiciones $p_i$ en un documento \textit{D} en donde aparece el término \textit{T}. Una posición en un documento corresponde a la cantidad de términos hasta el término en consideración, empezando por el 1.

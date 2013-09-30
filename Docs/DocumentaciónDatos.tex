@@ -1,0 +1,110 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+
+%idioma
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+
+%hipervinculos
+\usepackage{hyperref}
+
+%gráficos
+\usepackage{graphicx}
+% % % % % % % % % % % % % % % % % % % % % % Fuentes piola
+
+
+\usepackage{cmbright}
+
+
+%Bibtex
+\usepackage[numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+
+\usepackage{amsmath}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[scaled]{beramono}
+\usepackage{inconsolata}
+            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%Microtype = estilo más refinado (?)
+\usepackage[protrusion=true,expansion=true]{microtype}
+%\usepackage{microtype}%Estandar
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%Gráficos
+\usepackage{graphicx}
+\usepackage[small]{caption}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%Tablas
+\usepackage{multirow}
+\usepackage{tabularx} %tablas con mucho texto
+\usepackage{booktabs}
+
+%Listings para código fuente
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+%numbers=left,
+%numberstyle=\tiny,
+%frame=tb,
+resetmargins=true,
+%columns=fullflexible,
+showstringspaces=false,
+%numberstyle=\tiny\sffamily,
+%stepnumber=10,
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Cabecera y pie de página
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} %Limpia las cabeceras
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\footnotesize\bfseries  [75.06] Organización de Datos}
+%\fancyhead[C]{}
+\fancyhead[R]{\footnotesize\bfseries  Diseño TP} %- Grupo 20}
+
+\fancyfoot[L]{}
+\fancyfoot[C]{\thepage}
+\fancyfoot[R]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.6pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%Contador de secciones empieza en 0
+%\setcounter{section}{-1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%Fin declaraciones
+
+\begin{document}
+\bibliographystyle{plainnat}
+
+\tableofcontents
+\newpage
+
+\include{Parte00}
+\include{Parte01}
+\include{Parte02}
+
+\include{Parte03}
+
+\include{Parte04}
+
+\include{Parte06}
+\include{Parte07}
+
+\include{Parte05}
+
+\include{Parte08}
+
+
+
+%\bibliography{Referencias}
+
+\end{document}

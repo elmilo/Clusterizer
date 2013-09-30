@@ -1,0 +1,63 @@
+%\begin{center}
+%    \includegraphics[scale=0.8]{./images/graf9}
+%    \includegraphics[width=0.4\textwidth]{./images/logoFiubaCompleto}
+%\end{center}
+
+\section{Generación de términos}\label{sec:parser}
+ 
+Todos los términos estarán compuestos de una única palabra y se guardarán en el Diccionario con letras minúsculas. Se tomaron decisiones basándonos en las siguientes directivas.
+
+
+\subsection{No se guardarán términos de más de una palabra}
+
+Aunque los indices tipo Nextword (próxima palabra) son capaces de otorgar velocidades de acceso superiores a los índices invertidos tradicionales, ocupan en promedio un 60 \% del espacio de la colección, según mencionan \citet{Williams99what'snext?} (\citeyear{Williams99what'snext?}). 
+
+Para este Trabajo Práctico, se construirá un índice preparado para buscar frases, pero a través de sus posiciones. Esto quiere decir que se tendrán en cuenta la separación entre palabras dentro de un documento. Por ejemplo un sustantivo propio de más de una palabra como <<San Francisco>> se separará en dos términos <<San>> y <<Francisco>>. Al hacer la consulta el programa calculará la distancia entre las dos palabras: (<<San>>, posición $i$) y (<<Francisco>>, posición $i+1$), con las cuales se podrá intersecar con las listas invertidas de cada una y filtrar los documentos en donde en aparecen juntas en las posición requerida.
+
+
+\subsection{Se guardarán todos los términos en letra minúscula}
+En un texto, puede haber palabras que contengan mayúsculas en los siguientes casos:
+
+%comiencen con una letra mayúscula solo en 2 casos:
+
+\begin{itemize}
+\item Mayúscula al comenzar la palabra: porque es un sustantivo propio
+\item Mayúscula al comenzar la palabra: porque está precedida por un punto <<.>>
+\item Mayúscula en medio de la palabra: porque es un código o abreviatura (<<IQJ653>>, <<PhD>>)
+\end{itemize}
+
+Esto sería un problema si quisiéramos guardar términos de más de una palabra como en el ejemplo anterior ya que se complicaría enormemente para identificar <<San Francisco>> en el siguiente escenario: <<… buenos momentos. San Francisco es …>>. No hay forma de saber si <<San>> empieza con mayúscula porque es un sustantivo propio o porque está al lado de un punto. Por suerte, esto no será un problema, ya que se guardará todo en minúsculas.
+
+Que todo se guarde en minúsculas, también ayuda en la búsqueda, ya que el usuario del programa podría escribir de forma incorrecta sin poner las mayúsculas e igualmente encontrar lo que busca.
+
+ 
+ 
+\subsection{Casos particulares de signos de puntuación}
+ 
+\begin{itemize}
+
+\item Guiones: si se encuentra un guion (medio o bajo) se toma como si fuese un espacio. Si el guion está dividiendo 2 palabras, se guarda cada palabra por separado como un término. También se reemplazan por espacios las ‘@’ y los ‘/’.
+
+\item Apóstrofo (o comilla simple): por estar los textos de la colección en idioma inglés, conviene contemplar algunos casos del uso del apóstrofo y como se los tratará, a través de los siguientes ejemplos:
+\begin{itemize}
+
+\item  <<Grey’s Anatomy>>: en este caso, se guardarán los términos <<grey's>> y <<anatomy>> por separado.
+\item  <<Isn’t it?>>: se guardará <<isn't>> y <<it>>.
+\item  <<Baba O’Riley>>:  se guardará <<baba>> y <<o'riley>>.
+\item  Caracteres que se ignoran: todos los caracteres que no son alfanuméricos y <<encierran>> conjuntos de palabras como son \texttt{¿?¡!()[]{}}, comillas dobles, acentos graves y agudos.
+% ’’. 
+También se ignoran \texttt{.:,;~ * \^{} +- \$ \#} .
+
+\end{itemize}
+
+\end{itemize}
+
+\subsection{Números}
+
+Los números se guardarán como términos comunes y silvestres. Por ejemplo:
+
+\begin{itemize}
+\item <<1000>> $\Longrightarrow$ <<1000>>
+%\item <<1.000>> $\Longrightarrow$ <<1.000>>
+\item <<03/04/2004>> $\Longrightarrow$ <<03>>, <<04>> y <<2004>>
+\end{itemize}

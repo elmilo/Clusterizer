@@ -1,0 +1,12 @@
+\section{XR: experimental}
+
+\subsection{Corrector ortográfico}
+
+La idea detrás de un corrector ortográfico es poder darle al usuario respuestas a sus consultas que pueden ser igual o más relevantes que lo que él buscó inicialmente. 
+
+%Para ello se tomar como referencia a \cite{norvigSP}.
+
+Lo que haríamos, aprovechando que tenemos el Diccionario y sus frecuencias absolutas en memoria principal, es hacer las comparaciones utilizando las distancias de edición o de Levenshtein (\citet[p.~58]{Manning:2008}), para cada palabra de la frase buscada y retornar una frase (o varias) con las más frecuentes, para darla como opción de búsqueda.
+
+Utilizaremos para ello el algoritmo de \citeauthor{norvigSP}, el cual tiene, hasta hoy en día, el balance perfecto entre eficiencia y sencillez.
+

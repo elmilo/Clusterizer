@@ -1,0 +1,14 @@
+\section{Introducción}
+
+El objetivo de este Trabajo Práctico es realizar un programa que permita buscar frases en un conjunto de documentos (la colección).
+
+Para ello, luego de investigar sobre el tema, concluimos que la estructura más popular para este tipo de aplicación es el índice invertido, que consiste de dos grandes componentes: el vocabulario de términos (por ejemplo, de palabras) de la colección, y una lista invertida, la cual es una estructura que contiene información sobre la ocurrencia (o posición) del término.
+
+Para la búsqueda de frases en índices invertidos se han propuesto diferentes enfoques. La primera estrategia, propuesta en \citet{Williams99what'snext?} (\citeyear{Williams99what'snext?}) sería guardar palabras contiguas, en lo que se llama un índice de próxima palabra (nextword index). En la frase <<hoy hace calor>> se guardarían <<hoy hace>> y <<hace calor>> acompañado del documento en donde aparecen. Este enfoque podría utilizar hasta aproximadamente el doble de espacio en disco que la colección, porque se guardan todas las palabras de los documentos en dúos que pueden tener muy poca repetición. Se crean índices, aunque de tamaño considerable, de rápido accionar para encontrar frases.
+
+Otra estrategia, la que utilizaremos, es almacenar la posición de cada término en cada documento de forma ordenada, así pueden utilizarse distintos algoritmos de compresión. Para buscar una frase, primero se buscan todas las palabras que contiene y se obtienen las listas invertidas para cada una, extrayendo las posiciones y documentos en donde aparecen las mismas. Luego, aplicando un algoritmo de intersección, se filtran los documentos en donde las palabras efectivamente existen en el orden deseado.
+
+Una última estrategia, bastante más sofisticada, sería la presentada por \citet{Williams:2004:FPQ:1028099.1028102} (\citeyear{Williams:2004:FPQ:1028099.1028102}) en donde se hace una combinación de las anteriores (un índice invertido con las palabras menos comunes y un indice de próxima palabra con los dúos más comunes) pero agregando un índice con las frases más comunes. Esta aproximación acelera un 400 \% el tiempo de búsqueda sobre nuestra propuesta, pero ocupa el doble de espacio en disco, según el mismo artículo. Como priorizamos espacio antes que tiempo, la idea es descartada.
+
+
+
