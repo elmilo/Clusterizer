@@ -7,7 +7,7 @@ class DocumentClustering
 
 
            //FUNCIONES PRIVADAS
-	   Boolean CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter);
+	   bool CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter);
        	   int FindClosestClusterCenter(List<Centroid> clusterCenter,DocumentVector obj);
 	   List<Centroid> CalculateMeanPoints(List<Centroid> _clusterCenter);
       	   void FindRSS(List<Centroid> newCentroid, List<Centroid> _clusterCenter);  //NO SE USA EN EL ORIGINAL
@@ -42,7 +42,7 @@ class DocumentClustering
                    centroidCollection.Add(c);                
                }
    
-               Boolean stoppingCriteria;
+               bool stoppingCriteria;
                List<Centroid> resultSet;
                List<Centroid> prevClusterCenter;
                
@@ -133,7 +133,7 @@ class DocumentClustering
           /// <param name="prevClusterCenter"></param>
           /// <param name="newClusterCenter"></param>
           /// <returns></returns>
-          Boolean DocumentClustering::CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter)
+          bool DocumentClustering::CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter)
           {
               
               globalCounter++;
