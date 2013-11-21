@@ -17,15 +17,15 @@ typedef map<string, listaD> mapaDelDiccionario;
 
 class Diccionario{
 
+public:
 mapaDelDiccionario diccionario;
 
-
-public:
-
+int getCantTerminos();
 /**
  * Trata de insertar una palabra si corresponde, si no actualiza la lista
  * */
 void insertar(palabraPos termino, unsigned unDocID);
+
 
 /**
  * TEMPORAL

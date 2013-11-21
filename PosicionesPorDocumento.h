@@ -18,7 +18,7 @@ public:
 PosicionesPorDocumento(unsigned int primera);
 PosicionesPorDocumento();
 
-void insertarPosicion(unsigned int una);
+void insertarPosicion();
 
 /**
 * Se puede utilizar para obtener la frecuencia total por palabra 

@@ -4,18 +4,20 @@
 void Diccionario::insertar(palabraPos termino, unsigned unDocID){
 
 string unTermino = termino.palabra;
-unsigned int unaPosicion = termino.posicion + 1;
+
 
 unsigned docID = unDocID + 1; //Los guardo con el docID empezando de 1
 
 if (diccionario.count(unTermino) == 1){
     if (diccionario[unTermino].count(docID)==1){
         //El termino y el documento existen en el diccionario
-        diccionario[unTermino][docID].insertarPosicion(unaPosicion);
+        diccionario[unTermino][docID].insertarPosicion();
         
         }else{
         //Significa que el termino existe, pero el mapa del documento no.
-        PosicionesPorDocumento listado(unaPosicion);
+        PosicionesPorDocumento listado;
+        //sumamos frecuencia +1
+        listado.insertarPosicion();
         diccionario[unTermino].insert(make_pair(docID, listado));
         }
     }else{
@@ -24,9 +26,12 @@ if (diccionario.count(unTermino) == 1){
      * debe crear el mapa para ese termino y el del documento
      * */
     listaD mapita;
-    PosicionesPorDocumento listado(unaPosicion);
+
+    PosicionesPorDocumento listado;
+    //sumamos frecuencia +1
+    listado.insertarPosicion();
     mapita[docID] = listado;
-    
+
     diccionario.insert(make_pair(unTermino, mapita));
     }
 };
@@ -35,18 +40,17 @@ if (diccionario.count(unTermino) == 1){
  * 
  * TEMPORAL
  * */
+ 
+int Diccionario::getCantTerminos(){
+	return diccionario.size();
+	}
+ 
 void Diccionario::mostrar(){
     listaD::iterator interno;
     mapaDelDiccionario::iterator externo;
 
   for (externo=diccionario.begin(); externo!=diccionario.end(); externo++){
-        cout << externo->first << ",";
-    for (interno=externo->second.begin(); interno != externo->second.end(); interno++){
-        //cout << interno->first << ";" << endl;
-        //cout << "Posiciones: ";
-        interno->second.mostrarPosiciones();
-        //cout << "--------------------" << endl;}
-        cout << endl;}
+        cout << externo->first <<endl;
     }
     
 };
