@@ -27,7 +27,7 @@ VectorSpaceModel.o: VectorSpaceModel.cpp VectorSpaceModel.h
 	g++ $(CXXFLAGS) -c VectorSpaceModel.cpp
 	
 DocumentVector.o: DocumentVector.cpp DocumentVector.h 
-	g++ $(CXXFLAGS) -c DocumentVector.cpp	
+	g++ $(CXXFLAGS) -c DocumentVector.cpp
 
 main.o: main.cpp
 	g++ $(CXXFLAGS) -c main.cpp

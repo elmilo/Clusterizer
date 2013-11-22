@@ -2,14 +2,14 @@
 
 DocumentVector::DocumentVector() {
 }
-void DocumentVector::setTamanio(int tamanio){
-for (int i=0; i<tamanio; i++){
+void DocumentVector::setTamanio(unsigned tamanio){
+for (unsigned i=0; i<tamanio; i++){
 VectorSpace.push_back(0);
 }
 	}
 
 
-void DocumentVector::agregarEnPos(int pos, double valor){
+void DocumentVector::agregarEnPos(unsigned pos, double valor){
 	VectorSpace[pos]=valor;
 	}
 	

@@ -2,11 +2,11 @@
 
 using namespace std;
 
-VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, int cantDocs) {
+VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, unsigned cantDocs) {
 	this->dic = diccionario;
 	this->cantDocs = cantDocs;
-	int cantTerminos = diccionario->getCantTerminos();
-	for (int i = 0; i < cantDocs; i++) {
+	unsigned cantTerminos = diccionario->getCantTerminos();
+	for (unsigned i = 0; i < cantDocs; i++) {
 		DocumentVector* vector = new DocumentVector();
 		vector->setTamanio(cantTerminos);
 		matriz.push_back(vector);
@@ -22,28 +22,28 @@ void VectorSpaceModel::mostrarMatriz() {
 }
 
 vector<DocumentVector*> VectorSpaceModel::ProcessDocumentCollection() {
-	listaD::iterator interno;
+	listaD::iterator unsignederno;
 	mapaDelDiccionario::iterator externo;
 	DocumentVector* documentVector;
-	int posTermino = 0;
-	int ft;
+	unsigned posTermino = 0;
+	unsigned ft;
 	for (externo = dic->diccionario.begin(); externo != dic->diccionario.end();
 			externo++) {
-		for (interno = externo->second.begin();
-				interno != externo->second.end(); interno++) {
+		for (unsignederno = externo->second.begin();
+				unsignederno != externo->second.end(); unsignederno++) {
 			externo->second.size();
 			ft = externo->second.size();
 			//agregamos frecuencias a los vectores
-			documentVector = matriz[interno->first - 1];
+			documentVector = matriz[unsignederno->first - 1];
 			documentVector->agregarEnPos(posTermino,
-			FindTFIDF(ft, interno->second.getFrecuencia()));
+			FindTFIDF(ft, unsignederno->second.getFrecuencia()));
 		}
 		posTermino++;
 	}
 	return matriz;
 }
 
-float VectorSpaceModel::FindTFIDF(int ft, int ftd) {
+float VectorSpaceModel::FindTFIDF(unsigned ft, unsigned ftd) {
 	float idf;
 	idf = log10(cantDocs / ft);
 	return (ftd * idf);

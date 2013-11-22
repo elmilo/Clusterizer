@@ -18,8 +18,8 @@ public:
 	DocumentVector();
       //represents the tf*idf of  each document
       std::vector<float> VectorSpace;
-      void setTamanio(int tamanio);
-      void agregarEnPos(int pos, double valor);
+      void setTamanio(unsigned tamanio);
+      void agregarEnPos(unsigned pos, double valor);
       void mostrarVector();
 	virtual ~DocumentVector();
 };

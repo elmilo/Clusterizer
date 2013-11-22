@@ -19,16 +19,16 @@ public:
 
 Diccionario* dic;
 vector<DocumentVector*> matriz;
-int cantDocs;
+unsigned cantDocs;
 
-VectorSpaceModel(Diccionario *dic, int cantDocs);
+VectorSpaceModel(Diccionario *dic, unsigned cantDocs);
 
 
 void mostrarMatriz();
 
 vector<DocumentVector*> ProcessDocumentCollection();
 
-float FindTFIDF(int ft, int ftd);
+float FindTFIDF(unsigned ft, unsigned ftd);
 
 };
 
