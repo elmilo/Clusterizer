@@ -5,31 +5,29 @@ const char* Tokenizer::delim = ".,:;`/\"+-_(){}[]<>*&^%$#@!?~/|\\= \t\n'";
 /****PUBLIC***********/
 
 Tokenizer::Tokenizer(string direccionArchivo){
-    cantidad = 0;
+    inicializar(direccionArchivo);
+}
+
+void Tokenizer::inicializar(string direccionArchivo){
     direccion = direccionArchivo.c_str();
     setearStopWords();
     separarTokens();
-};
-
+    }
+    
 string Tokenizer::siguienteTermino(){
 
     string termino = posiciones.front();
     posiciones.pop_front();
     
-    cantidad++;
-    
     return termino;
 
 };
 
-unsigned Tokenizer::siguientePosicion(){
-    return cantidad;
-};
 
 bool Tokenizer::tengaTerminos(){
-    
     return !(posiciones.empty());
 };
+
 
 /**********************************************************************************/
 /****PRIVATE***********/

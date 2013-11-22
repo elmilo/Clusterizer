@@ -25,30 +25,27 @@ using namespace std;
 
 class Tokenizer{
 
-public:
 
 public:
 Tokenizer(std::string direccionArchivo);
-
-void normalizar (string unaFrase);
 
 bool tengaTerminos();
 
 string siguienteTermino();
 
-unsigned siguientePosicion();
 
 
 private:
     set<string> StopWords;
     static const char* delim;
     list<string> posiciones;
-    unsigned cantidad;
     const char* direccion;
 
 void agregarEnContenedor(char *palabra);
-//bool esAlfaNum (string entrada);
+
 bool esLetraAlfabeto (string entrada);
+
+void inicializar(string direccionArchivo);
 
 bool setearStopWords();
 /**

@@ -44,7 +44,7 @@ unsigned Diccionario::getCantTerminos(){
  * 
  * TEMPORAL
  * */
-void Diccionario::mostrar(){
+/*void Diccionario::mostrar(){
     
     listaD::iterator interno;
     mapaDelDiccionario::iterator externo;
@@ -59,5 +59,16 @@ void Diccionario::mostrar(){
         cout << "--------------------" << endl;}
     }
     
+};*/
+
+void Diccionario::mostrar(){
+    listaD::iterator interno;
+    mapaDelDiccionario::iterator externo;
+
+  for (externo=diccionario.begin(); externo!=diccionario.end(); externo++){
+        cout << externo->first <<endl;
+    }
+    
 };
+
 

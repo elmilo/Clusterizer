@@ -12,24 +12,24 @@
 
 int main(int argc, char **argv){
     
-    string directorio="textos";
+    string directorio="otrostextos/textosingles";
 
-    Loader cargados(directorio, "");
+    Loader archivosCargados(directorio, "");
+    unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
 
     Diccionario *miDiccionario = new Diccionario;
     
-    
 
-    while (!cargados.estaVacio()) {
-        Tokenizer parseando(cargados.popDocumento());
+    while (!archivosCargados.estaVacio()) {
+        Tokenizer tokenizer(archivosCargados.popDocumento());
         
-        unsigned docID = cargados.getDocID();
-        while (parseando.tengaTerminos()){
-            miDiccionario->agregarTermino(parseando.siguienteTermino(), docID);
+        unsigned docID = archivosCargados.getDocID();
+        while (tokenizer.tengaTerminos()){
+            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), docID);
         }
     }
     
-    unsigned cantidadIDs = cargados.cantidadDocIDs();
+    
     
     miDiccionario->mostrar();
  
@@ -38,13 +38,13 @@ VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 //genera toda la coleccion de vectores de pesos
 vector<DocumentVector*> matriz=vecSpaceModel.ProcessDocumentCollection();
 // muetra todos los vectores, cada vector es un doc   
-//vecSpaceModel.mostrarMatriz();
+vecSpaceModel.mostrarMatriz();
 
-for (std::vector<DocumentVector*>::iterator it = matriz.begin();
+/*for (std::vector<DocumentVector*>::iterator it = matriz.begin();
 			it != matriz.end(); ++it) {
 		(*it)->mostrarVector();
 		cout << endl;
-	}
+	}*/
 
 delete miDiccionario;
 
