@@ -2,7 +2,7 @@
 
 using namespace std;
 
-VectorSpaceModel::VectorSpaceModel(Diccionario* diccionario, int cantDocs) {
+VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, int cantDocs) {
 	this->dic = diccionario;
 	this->cantDocs = cantDocs;
 	int cantTerminos = diccionario->getCantTerminos();

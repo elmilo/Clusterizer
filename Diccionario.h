@@ -1,31 +1,40 @@
 #ifndef DICCIONARIO_H_INCLUDED
 #define DICCIONARIO_H_INCLUDED
 
-#include "common.h"
-#include "PosicionesPorDocumento.h"
+#include <iostream>
+#include <string>
+#include <list>
+#include <map>
+#include <set>
 
+#include "FrecuenciasPorDocumento.h"
+
+using namespace std;
 
 /**
  * Tipos personalizados: 
-*          - un mapa con docIDs (unsigned) y clase lista de posiciones
+*          - un mapa con docIDs (unsigned) y clase FrecuenciasPorDocumento
 *          - otro mapa con strings de palabras y el anterior.
  * */
-typedef map<unsigned, PosicionesPorDocumento> listaD;
-//typedef vector<PosicionesPorDocumento> listaD;
-typedef map<string, listaD> mapaDelDiccionario;
+typedef std::map<unsigned, FrecuenciasPorDocumento> listaD;
+typedef std::map<string, listaD> mapaDelDiccionario;
 
 
 class Diccionario{
 
 public:
+
 mapaDelDiccionario diccionario;
 
-int getCantTerminos();
+unsigned getCantTerminos();
+
+
+
 /**
  * Trata de insertar una palabra si corresponde, si no actualiza la lista
  * */
-void insertar(palabraPos termino, unsigned unDocID);
-
+       
+void agregarTermino(std::string palabra, unsigned unDocID);
 
 /**
  * TEMPORAL

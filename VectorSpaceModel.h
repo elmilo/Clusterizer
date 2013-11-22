@@ -21,7 +21,7 @@ Diccionario* dic;
 vector<DocumentVector*> matriz;
 int cantDocs;
 
-VectorSpaceModel(Diccionario* dic, int cantDocs);
+VectorSpaceModel(Diccionario *dic, int cantDocs);
 
 
 void mostrarMatriz();

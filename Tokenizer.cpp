@@ -2,10 +2,64 @@
 
 const char* Tokenizer::delim = ".,:;`/\"+-_(){}[]<>*&^%$#@!?~/|\\= \t\n'";
 
-bool Tokenizer::esAlfaNum (string entrada){
+/****PUBLIC***********/
+
+Tokenizer::Tokenizer(string direccionArchivo){
+    cantidad = 0;
+    direccion = direccionArchivo.c_str();
+    setearStopWords();
+    separarTokens();
+};
+
+string Tokenizer::siguienteTermino(){
+
+    string termino = posiciones.front();
+    posiciones.pop_front();
+    
+    cantidad++;
+    
+    return termino;
+
+};
+
+unsigned Tokenizer::siguientePosicion(){
+    return cantidad;
+};
+
+bool Tokenizer::tengaTerminos(){
+    
+    return !(posiciones.empty());
+};
+
+/**********************************************************************************/
+/****PRIVATE***********/
+/**********************************************************************************/
+
+/*bool Tokenizer::esAlfaNum (string entrada){
   locale loc;
   for (unsigned i=0; i< entrada.length() ; i++){
     if ( !isalnum(entrada[i]) )
+        return false;
+        }
+    return true;
+}*/
+
+bool Tokenizer::setearStopWords(){
+    ifstream ifile;
+    ifile.open(direccion);
+    if(!ifile)
+        return false;   //could not read the file.
+    string linea;
+    while(ifile>>linea){
+        StopWords.insert(linea);
+    }
+    return true;
+}
+
+bool Tokenizer::esLetraAlfabeto (string entrada){
+  locale loc;
+  for (unsigned i=0; i< entrada.length() ; i++){
+    if ( !isalpha(entrada[i]) )
         return false;
         }
     return true;
@@ -20,10 +74,11 @@ void Tokenizer::agregarEnContenedor(char *palabra){
 
     string tokenito(palabra, tamanio);
     
-    if ( esAlfaNum(tokenito) ) {
+    if (esLetraAlfabeto(tokenito)){
         transform(tokenito.begin(),tokenito.end(),tokenito.begin(),(int (*)(int))tolower );
-        posiciones.push_back(tokenito);
-        }
+        if ((tokenito.size()>3) && (StopWords.count(tokenito)!=0))
+            posiciones.push_back(tokenito);        
+    }
 }
 
 /**
@@ -64,72 +119,3 @@ int Tokenizer::separarTokens(){
  
         return 1;
 }
-
-
-void Tokenizer::normalizar (string unaFrase){
-    
-    const char* origen = unaFrase.c_str();
-    char *frase, *palabra, *agregada;
-    
-    frase = strdup(origen);
-
-    palabra = strtok(frase, delim);
-    
-    while(palabra != NULL) {
-            
-            agregada = strdup(palabra);
-            
-            agregarEnContenedor(agregada);
-
-            palabra = strtok(NULL, delim);
-    }
-        
-}
-
-
-void Tokenizer::parsearArchivo (string unaDire){
-    direccion = unaDire.c_str();
-    separarTokens();    
-    }
-
-string Tokenizer::siguienteTermino(){
-
-    string termino = posiciones.front();
-    posiciones.pop_front();
-    
-    cantidad++;
-    
-    return termino;
-
-};
-
-palabraPos Tokenizer::unTermino(){
-    
-    palabraPos termino;
-    
-    
-
-    termino.palabra = posiciones.front();
-    termino.posicion = cantidad;
-    posiciones.pop_front();
-    
-    cantidad++;
-    
-    return termino;
-
-};
-
-unsigned Tokenizer::siguientePosicion(){
-    return cantidad;
-};
-
-Tokenizer::Tokenizer(string direccionArchivo){
-    cantidad = 0;
-    parsearArchivo(direccionArchivo);
-};
-
-bool Tokenizer::tengaTerminos(){
-    
-    return !(posiciones.empty());
-    
-};

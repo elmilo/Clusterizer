@@ -1,3 +1,6 @@
+#ifndef TOKENIZER_H_INCLUDED
+#define TOKENIZER_H_INCLUDED
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,36 +10,25 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <list>
+
 #include <string>
 #include <iostream>
+
+
+#include <vector>
+#include <fstream>
+#include <iterator>
+#include <set>
 #include <algorithm>
-#include "common.h"
 
 using namespace std;
 
 class Tokenizer{
-private:
-
-    static const char* delim;
-    list<string> posiciones;
-    unsigned cantidad;
-    const char* direccion;
-
-void agregarEnContenedor(char *palabra);
-bool esAlfaNum (string entrada);
-
-/**
- * Codigo C
- * */
-int separarTokens();
-
-
-void parsearArchivo (string unaDire);
-
 
 public:
 
-Tokenizer(string direccionArchivo);
+public:
+Tokenizer(std::string direccionArchivo);
 
 void normalizar (string unaFrase);
 
@@ -44,7 +36,26 @@ bool tengaTerminos();
 
 string siguienteTermino();
 
-palabraPos unTermino();
-
 unsigned siguientePosicion();
+
+
+private:
+    set<string> StopWords;
+    static const char* delim;
+    list<string> posiciones;
+    unsigned cantidad;
+    const char* direccion;
+
+void agregarEnContenedor(char *palabra);
+//bool esAlfaNum (string entrada);
+bool esLetraAlfabeto (string entrada);
+
+bool setearStopWords();
+/**
+ * Codigo C
+ * */
+int separarTokens();
+
 };
+
+#endif

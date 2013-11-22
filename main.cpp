@@ -1,40 +1,40 @@
 #include "Tokenizer.h"
 #include "Diccionario.h"
-#include "ListadorDeArchivos.h"
+#include "Loader.h"
+#include "FrecuenciasPorDocumento.h"
+
+
 #include "VectorSpaceModel.h"
 #include "DocumentVector.h"
+
 #include <iostream>
 
 
 int main(int argc, char **argv){
     
-    Diccionario* eldicc= new Diccionario();
-    
     string directorio="textos";
 
-    ListadorDeArchivos lister(directorio);
-    
-    Tokenizer *parser;
+    Loader cargados(directorio, "");
 
-    unsigned cantidadIDs = lister.tamanio();
-    /**********************************************************/
+    Diccionario *miDiccionario = new Diccionario;
     
-    for (unsigned i = 0; (i < cantidadIDs); i++){
     
-    parser = new Tokenizer(lister.documento(i));
-    
-    while ( parser->tengaTerminos() ) {
-        eldicc->insertar( parser->unTermino(), i); 
+
+    while (!cargados.estaVacio()) {
+        Tokenizer parseando(cargados.popDocumento());
+        
+        unsigned docID = cargados.getDocID();
+        while (parseando.tengaTerminos()){
+            miDiccionario->agregarTermino(parseando.siguienteTermino(), docID);
         }
-    
-    delete parser;
     }
     
-//muestra los terminos    
-	eldicc->mostrar();
-
+    unsigned cantidadIDs = cargados.cantidadDocIDs();
+    
+    miDiccionario->mostrar();
+ 
 //inicializa vector space model
-   VectorSpaceModel vecSpaceModel(eldicc, cantidadIDs);
+VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 //genera toda la coleccion de vectores de pesos
 vector<DocumentVector*> matriz=vecSpaceModel.ProcessDocumentCollection();
 // muetra todos los vectores, cada vector es un doc   
@@ -45,6 +45,8 @@ for (std::vector<DocumentVector*>::iterator it = matriz.begin();
 		(*it)->mostrarVector();
 		cout << endl;
 	}
+
+delete miDiccionario;
 
 return 0;
 }

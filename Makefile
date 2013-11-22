@@ -1,30 +1,26 @@
-OBJ = main.o Diccionario.o ListadorDeArchivos.o Tokenizer.o PosicionesPorDocumento.o VectorSpaceModel.o DocumentVector.o
-#CXXFLAGS = -fmessage-length=0 -std=c++11 -Wall
-CXXFLAGS = -Wall
+OBJ = main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o DocumentVector.o
+CXXFLAGS = -fmessage-length=0 -Wall
 #CXXDEBUG = -O0 -g3
 #CXXRELEASE = -O3
 
 #all: debug
 
 #debug: CXX += $(CXXDEBUG)
-#debug: Indexador
+#debug: clusterizer
 
 release: CXX += $(CXXRELEASE)
-release: Indexador
+release: clusterizer
 
-Indexador: main.o Diccionario.o ListadorDeArchivos.o Tokenizer.o PosicionesPorDocumento.o VectorSpaceModel.o DocumentVector.o
-	g++ -o Indexador $(OBJ)
+FrecuenciasPorDocumento.o: FrecuenciasPorDocumento.cpp FrecuenciasPorDocumento.h
+	g++ $(CXXFLAGS) -c FrecuenciasPorDocumento.cpp
 
-main.o: main.cpp
-	g++ $(CXXFLAGS) -c main.cpp
-
-Diccionario.o: Diccionario.h Diccionario.cpp PosicionesPorDocumento.h
+Diccionario.o: Diccionario.h Diccionario.cpp FrecuenciasPorDocumento.h
 	g++ $(CXXFLAGS) -c Diccionario.cpp
 
-ListadorDeArchivos.o: ListadorDeArchivos.cpp ListadorDeArchivos.h
-	g++ $(CXXFLAGS) -c ListadorDeArchivos.cpp
+Loader.o: Loader.cpp Loader.h
+	g++ $(CXXFLAGS) -c Loader.cpp
 
-Tokenizer.o: Tokenizer.cpp Tokenizer.h 
+Tokenizer.o: Tokenizer.cpp Tokenizer.h
 	g++ $(CXXFLAGS) -c Tokenizer.cpp
 
 VectorSpaceModel.o: VectorSpaceModel.cpp VectorSpaceModel.h 
@@ -33,10 +29,14 @@ VectorSpaceModel.o: VectorSpaceModel.cpp VectorSpaceModel.h
 DocumentVector.o: DocumentVector.cpp DocumentVector.h 
 	g++ $(CXXFLAGS) -c DocumentVector.cpp	
 
-PosicionesPorDocumento.o: PosicionesPorDocumento.cpp PosicionesPorDocumento.h common.h
-	g++ $(CXXFLAGS) -c PosicionesPorDocumento.cpp
+main.o: main.cpp
+	g++ $(CXXFLAGS) -c main.cpp
+
+clusterizer: main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o DocumentVector.o
+	g++ -o clusterizer $(OBJ)
+
 
 clean:
-	rm $(OBJ) Indexador
+	rm $(OBJ) clusterizer
 
 .PHONY = clean
