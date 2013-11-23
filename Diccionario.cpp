@@ -3,9 +3,6 @@
 
 void Diccionario::agregarTermino(std::string unTermino, unsigned unDocID){
 
-/*string unTermino = termino.palabra;
-unsigned int unaPosicion = termino.posicion;*/
-
 unsigned docID = unDocID + 1; //Los guardo con el docID empezando de 1
 
 if (diccionario.count(unTermino) == 1){
@@ -36,9 +33,9 @@ if (diccionario.count(unTermino) == 1){
 };
 
 unsigned Diccionario::getCantTerminos(){
-	return diccionario.size();
-	}
-    
+    return diccionario.size();
+}
+
 
 /**
  * 

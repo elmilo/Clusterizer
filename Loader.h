@@ -9,11 +9,11 @@
 #include <string.h>
 #include <fstream>
 #include <dirent.h>
-#include <list>
 #include <algorithm> 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <vector>
 
 using namespace std;
 
@@ -28,18 +28,12 @@ public:
 	Loader(string directorio, string extension);
 
 	/**
-	 * Pregunta si la estructura esta vacia
+	 * Obtener un documento en la posiciones deseada
 	 * */
-	bool estaVacio();
+	string popDocumento(unsigned unaPos);
 
-	/**
-	 * Obtener un documento
-	 * */
-	string popDocumento();
-
-	unsigned getDocID();
-    
-    unsigned cantidadDocIDs();
+	unsigned cantidadDocIDs();
+	
 
 private:
 	struct datosArchivos{
@@ -50,13 +44,14 @@ private:
 		    }
 	};
 	
-	list<datosArchivos> direcciones; //guarda las direcciones de archivos que van a ser leidos
+	vector<datosArchivos> direcciones; //guarda las direcciones de archivos que van a ser leidos
 
 	const char * raizPpal; //raiz principal: la que se pasa para leer los archivos
 	string raizPpalStr;
 	
 	unsigned largoRaizStr; //tamanio del string de la raiz principal
-	unsigned laPosicion; //Guarda la posicion (usado para docID)
+
+	
 
 	/**
 	 * Filtra los directorios y los archivos

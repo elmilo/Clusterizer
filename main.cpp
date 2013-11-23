@@ -17,23 +17,21 @@ int main(int argc, char **argv){
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
-
+    
     Diccionario *miDiccionario = new Diccionario;
     
 
-    while (!archivosCargados.estaVacio()) {
-        Tokenizer tokenizer(archivosCargados.popDocumento());
-        
-        unsigned docID = archivosCargados.getDocID();
+    for (unsigned i = 0; i<cantidadIDs; i++){
+        Tokenizer tokenizer(archivosCargados.popDocumento(i));
         while (tokenizer.tengaTerminos()){
-            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), docID);
+            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), i);
         }
     }
     
     
     
     miDiccionario->mostrar();
- 
+     
 //inicializa vector space model
 VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 //genera toda la coleccion de vectores de pesos

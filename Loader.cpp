@@ -1,7 +1,39 @@
 #include "Loader.h"
 
-/***********************************************************************************/
-/***********************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+/**PUBLIC**************************************************/
+Loader::Loader(string directorio, string extension = "") {
+    raizPpalStr = directorio;
+    raizPpal = directorio.c_str();
+    largoRaizStr = directorio.length();
+    listarArchivos(raizPpal, extension); //llamadas
+    std::sort (direcciones.begin(), direcciones.end());//ordenar de mayor a menor
+}
+
+
+string Loader::popDocumento(unsigned unaPos) {
+    datosArchivos unArchivo = direcciones.at(unaPos);
+    string Archivo = unArchivo.nombreArchivo;
+    return raizPpalStr + SEPARADOR_DIR + Archivo;
+}
+
+
+unsigned Loader::cantidadDocIDs(){
+    return direcciones.size();
+}
+
+/******************************************************************************/
+/******************************************************************************/
+/**PRIVATE**************************************************/
+
+long Loader::obtenerTamanioArchivo(std::string direccionArchivo){
+    struct stat stat_buf;
+    int rc = stat(direccionArchivo.c_str(), &stat_buf);
+    return rc == 0 ? stat_buf.st_size : -1;
+}
+
+
 int Loader::filtroArchivos(const struct dirent * dire, const char* raiz) {
 
 	/* Descartar "." y ".." , NO se listan */
@@ -22,20 +54,17 @@ int Loader::filtroArchivos(const struct dirent * dire, const char* raiz) {
 	return 1;
 }
 
-/***********************************************************************************/
-/***********************************************************************************/
+
 string Loader::sacarRaizPpal(string unArchivo) {
 	return unArchivo.erase(0, largoRaizStr);
 }
 
-/***********************************************************************************/
-/***********************************************************************************/
+
 bool Loader::filtroExtensiones(string nombreArchivo, string extension) {
 	return nombreArchivo.find(extension) != string::npos; //Si es distinto, encuentra la extension
 }
 
-/***********************************************************************************/
-/***********************************************************************************/
+
 void Loader::insertar(string nombreArchivoPorAgregar, string extension, long tamanio) {
 	if (filtroExtensiones(nombreArchivoPorAgregar, extension)){
         datosArchivos addendum;
@@ -46,16 +75,15 @@ void Loader::insertar(string nombreArchivoPorAgregar, string extension, long tam
 		direcciones.push_back(addendum);}
 }
 
-/***********************************************************************************/
-/***********************************************************************************/
+
 void Loader::listarArchivos(const char* unDirectorio, string extension = "") {
 	DIR *pDIR;
 	struct dirent *entrada;
 	string raiz(unDirectorio);
 	int stopper; //estado del filtro
-
-	if (pDIR = opendir(unDirectorio)) {
-		while (entrada = readdir(pDIR)) {
+	pDIR = opendir(unDirectorio);
+	if (pDIR != NULL) {
+		while ((entrada = readdir(pDIR)) != NULL) {
 
 			stopper = filtroArchivos(entrada, unDirectorio);
 
@@ -91,64 +119,3 @@ void Loader::listarArchivos(const char* unDirectorio, string extension = "") {
 		closedir(pDIR);
 	}
 }
-
-/***********************************************************************************/
-/***********************************************************************************/
-Loader::Loader(string directorio, string extension = "") {
-	raizPpalStr = directorio;
-	raizPpal = directorio.c_str();
-	largoRaizStr = directorio.length();
-
-	laPosicion = 0;
-
-	listarArchivos(raizPpal, extension); //llamadas
-    //
-    //ORDENAR
-    //
-	//std::sort(direcciones.begin(), direcciones.end()); 
-	direcciones.sort();
-}
-;
-
-/***********************************************************************************/
-/***********************************************************************************/
-bool Loader::estaVacio() {
-	return direcciones.empty();
-}
-
-/***********************************************************************************/
-/***********************************************************************************/
-string Loader::popDocumento() {
-	datosArchivos unArchivo = direcciones.front(); //Pide el frente
-    
-    
-    string Archivo = unArchivo.nombreArchivo;
-    /*long tama = unArchivo.tamanioArchivo;
-    std::cout << tama << std::endl;*/
-    
-    
-	direcciones.pop_front(); //Borra el frente
-
-	return raizPpalStr + SEPARADOR_DIR + Archivo;
-}
-;
-
-/***********************************************************************************/
-/***********************************************************************************/
-unsigned Loader::getDocID() {
-
-	unsigned devuelve = laPosicion++;
-	return devuelve;
-}
-
-unsigned Loader::cantidadDocIDs(){
-    return direcciones.size();
-}
-
-/***********************************************************************************/
-/***********************************************************************************/
-long Loader::obtenerTamanioArchivo(std::string direccionArchivo){
-	    struct stat stat_buf;
-	    int rc = stat(direccionArchivo.c_str(), &stat_buf);
-	    return rc == 0 ? stat_buf.st_size : -1;
-	}
