@@ -1,9 +1,5 @@
 #include "DocumentClustering.h"
-
-
-       	DocumentClustering::DocumentClustering(){
-		}
-       	
+DocumentClustering::DocumentClustering(){}
        	
        	list<Centroid> DocumentClustering::PrepareDocumentCluster(int k, list<DocumentVector> documentCollection,ref int _counter){
 				
@@ -19,7 +15,7 @@
                HashSet<int> uniqRand = new HashSet<int>();
                GenerateRandomNumber(ref uniqRand,k,documentCollection.Count);
                
-               foreach(int pos in uniqRand) 
+               for(int pos : uniqRand) 
                {
                    c = new Centroid();                
                    c.GroupedDocument = new List<DocumentVector>();
@@ -37,7 +33,7 @@
                {
                    prevClusterCenter = centroidCollection;
    
-                   foreach (DocumentVector obj in documentCollection)
+                   for (DocumentVector obj : documentCollection)
                    {
                        int index = FindClosestClusterCenter(centroidCollection, obj);
                        resultSet[index].GroupedDocument.Add(obj);
@@ -230,7 +226,7 @@
                       {
                           float total = 0;
                           
-                          foreach (DocumentVector vSpace in _clusterCenter[i].GroupedDocument)
+                          for (DocumentVector vSpace : _clusterCenter[i].GroupedDocument)
                           {
   
                               total += vSpace.VectorSpace[j];
@@ -249,17 +245,3 @@
               return _clusterCenter;
   
           }
-          
-
-
-          //ESTO HABRIA QUE SACARLO YA QUE NO ESTA IMPLEMENTADO
-
-          /// <summary>
-          /// Find Residual sum of squares it measures how well a cluster centroid represents the member of their cluster
-          /// We can use the RSS value as stopping criteria of k-means algorithm when decreses in RSS value falls below a 
-          /// threshold t for small t we can terminate the algorithm.
-          /// </summary>
-          void DocumentClustering::FindRSS(list<Centroid> newCentroid, list<Centroid> _clusterCenter) 
-          {
-              //TODO:
-         }
