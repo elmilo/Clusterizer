@@ -28,10 +28,9 @@ string siguienteTermino();
 
 
 private:
-    set<string> StopWords;
-    static const char* delim;
-    list<string> posiciones;
-    const char* direccion;
+    set<string> StopWords; //Guarda las stopwords
+    list<string> TokenList; //Guarda los tokens
+    const char* direccion; //Direccion del archivo que se parsea
 
 void agregarEnContenedor(string entrada);
 
