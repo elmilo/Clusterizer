@@ -1,30 +1,15 @@
-class DocumentClustering
-       { 
-       private:
-
-           int globalCounter;
-           int counter;
+#include "DocumentClustering.h"
 
 
-           //FUNCIONES PRIVADAS
-	   bool CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter);
-       	   int FindClosestClusterCenter(List<Centroid> clusterCenter,DocumentVector obj);
-	   List<Centroid> CalculateMeanPoints(List<Centroid> _clusterCenter);
-      	   void FindRSS(List<Centroid> newCentroid, List<Centroid> _clusterCenter);  //NO SE USA EN EL ORIGINAL
-      	   void GenerateRandomNumber(ref HashSet<int> uniqRand, int k, int docCount);
-	   void InitializeClusterCentroid(out List<Centroid> centroid,int count);
-      
-
-      	public:	
-       			List<Centroid>PrepareDocumentCluster(int k, List<DocumentVector> documentCollection,ref int _counter);		
-    	};
-
-
-       	List<Centroid> DocumentClustering::PrepareDocumentCluster(int k, List<DocumentVector> documentCollection,ref int _counter){
+       	DocumentClustering::DocumentClustering(){
+		}
+       	
+       	
+       	list<Centroid> DocumentClustering::PrepareDocumentCluster(int k, list<DocumentVector> documentCollection,ref int _counter){
 				
-	       globalCounter = 0;
+				contadorGlobal = 0;
                //prepara k centroides iniciales y asigna un objeto al azar a cada centroide
-               List<Centroid> centroidCollection = new List<Centroid>();
+               list<Centroid> centroidCollection = new list<Centroid>();
                Centroid c;
                
                /*
@@ -133,7 +118,7 @@ class DocumentClustering
           /// <param name="prevClusterCenter"></param>
           /// <param name="newClusterCenter"></param>
           /// <returns></returns>
-          bool DocumentClustering::CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter)
+          bool DocumentClustering::CheckStoppingCriteria(list<Centroid> prevClusterCenter, list<Centroid> newClusterCenter)
           {
               
               globalCounter++;
@@ -203,7 +188,7 @@ class DocumentClustering
           }
   
           //Devuelve el indice del cluster mas cercano
-          int DocumentClustering::FindClosestClusterCenter(List<Centroid> clusterCenter,DocumentVector obj)
+          int DocumentClustering::FindClosestClusterCenter(list<Centroid> clusterCenter,DocumentVector obj)
           {
              
               float[] similarityMeasure = new float[clusterCenter.Count()];
@@ -232,7 +217,7 @@ class DocumentClustering
           }
   
           //Reposicionamiento del centroide
-          List<Centroid> DocumentClustering::CalculateMeanPoints(List<Centroid> _clusterCenter)
+          List<Centroid> DocumentClustering::CalculateMeanPoints(list<Centroid> _clusterCenter)
           {
               
               for (int i = 0; i < _clusterCenter.Count(); i++)
@@ -274,7 +259,7 @@ class DocumentClustering
           /// We can use the RSS value as stopping criteria of k-means algorithm when decreses in RSS value falls below a 
           /// threshold t for small t we can terminate the algorithm.
           /// </summary>
-          void DocumentClustering::FindRSS(List<Centroid> newCentroid, List<Centroid> _clusterCenter) 
+          void DocumentClustering::FindRSS(list<Centroid> newCentroid, list<Centroid> _clusterCenter) 
           {
               //TODO:
          }
