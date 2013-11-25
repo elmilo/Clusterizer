@@ -3,7 +3,7 @@
 
 void Diccionario::agregarTermino(std::string unTermino, unsigned unDocID){
 
-unsigned docID = unDocID + 1; //Los guardo con el docID empezando de 1
+unsigned docID = unDocID ; //Los guardo con el docID empezando de 0
 
 if (diccionario.count(unTermino) == 1){
     if (diccionario[unTermino].count(docID)==1){
@@ -58,6 +58,7 @@ unsigned Diccionario::getCantTerminos(){
     
 };*/
 
+
 void Diccionario::mostrar(){
     listaD::iterator interno;
     mapaDelDiccionario::iterator externo;
@@ -67,5 +68,3 @@ void Diccionario::mostrar(){
     }
     
 };
-
-

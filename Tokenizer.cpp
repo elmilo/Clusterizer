@@ -33,7 +33,7 @@ bool Tokenizer::tengaTerminos(){
 
 bool Tokenizer::setearStopWords(){
     ifstream ifile;
-    ifile.open("stopwords.txt");
+    ifile.open("stopwords/english.txt");
     if(!ifile)
         return false;
     string linea;

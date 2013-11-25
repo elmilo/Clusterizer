@@ -1,7 +1,7 @@
-OBJ = main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o DocumentVector.o
+OBJ = main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o
 CXXFLAGS = -fmessage-length=0 -Wall
 #CXXDEBUG = -O0 -g3
-#CXXRELEASE = -O3
+CXXRELEASE = -O3
 
 #all: debug
 
@@ -26,13 +26,10 @@ Tokenizer.o: Tokenizer.cpp Tokenizer.h
 VectorSpaceModel.o: VectorSpaceModel.cpp VectorSpaceModel.h 
 	g++ $(CXXFLAGS) -c VectorSpaceModel.cpp
 	
-DocumentVector.o: DocumentVector.cpp DocumentVector.h 
-	g++ $(CXXFLAGS) -c DocumentVector.cpp
-
 main.o: main.cpp
 	g++ $(CXXFLAGS) -c main.cpp
 
-clusterizer: main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o DocumentVector.o
+clusterizer: main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o
 	g++ -o clusterizer $(OBJ)
 
 
