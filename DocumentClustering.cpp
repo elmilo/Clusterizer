@@ -1,5 +1,6 @@
 #include "DocumentClustering.h"
-DocumentClustering::DocumentClustering(){}
+#define foreachx(_type,_iter,_coll) for (_type::iterator _iter = _coll.begin; _iter != _coll.end(); _iter++)
+DocumentClustering::DocumentClustering(){
        	
        	list<Centroid> DocumentClustering::PrepareDocumentCluster(int k, list<DocumentVector*> documentCollection,int _counter){
 				
@@ -12,14 +13,15 @@ DocumentClustering::DocumentClustering(){}
                 * Avoid repeation of random number, if same no is generated more than once same document is added to the next cluster 
                 * so avoid it using HasSet collection
                 */
-               vector<int> uniqRand;
+               std::vector<int> uniqRand;
                GenerateRandomNumber(uniqRand[],k,documentCollection.Count);
                
-               for(int pos : uniqRand) 
+               int pos;               
+               foreachx(uniqRand, pos, List) 
                {
                    Centroid c;                
                    c.GroupedDocument = new list<DocumentVector*>();
-                   c.GroupedDocument.Add(documentCollection[pos]);
+                   c.GroupedDocument.Add(documentCollection[*pos]);
                    centroidCollection.Add(c);                
                }
    
@@ -27,16 +29,17 @@ DocumentClustering::DocumentClustering(){}
                list<Centroid> resultSet;
                list<Centroid> prevClusterCenter;
                
-               InitializeClusterCentroid(out resultSet, centroidCollection.Count);
+               InitializeClusterCentroid(resultSet, centroidCollection.Count);
    
                do
                {
                    prevClusterCenter = centroidCollection;
    
-                   for (DocumentVector* obj : documentCollection)
+				   DocumentVector* obj;
+				   foreachx(documentCollection, obj, List) 
                    {
-                       int index = FindClosestClusterCenter(centroidCollection, obj);
-                       resultSet[index].GroupedDocument.Add(obj);
+                       int index = FindClosestClusterCenter(centroidCollection, *obj);
+                       resultSet[index].GroupedDocument.Add(*obj);
                    }
                    InitializeClusterCentroid(out centroidCollection, centroidCollection.Count());
                    centroidCollection = CalculateMeanPoints(resultSet);
@@ -68,26 +71,18 @@ DocumentClustering::DocumentClustering(){}
            {
                
                srand(time(NULL));
-               
+               int aux = k;
                if (k > docCount)
-              {
-                  do
-                  {
-                      int pos = (rand()%docCount);
-                      uniqRand.push_back(pos);
-  
-                  } while (uniqRand.Count != docCount);
-              }            
-              else
-              {
-                  do
-                  {
-                      int pos = (rand()%docCount);
-                      uniqRand.push_back(pos);
-  
-                  } while (uniqRand.Count != k);
-              }
-          }
+               {
+				  aux = docCount;
+				}
+				do
+				{
+				  int pos = (rand()%docCount);
+				  uniqRand.push_back(pos);
+
+				} while (uniqRand.Count != aux);
+			}
   
           /// <summary>
           /// Initialize the result cluster centroid for the next iteration, that holds the result to be returned
@@ -226,10 +221,11 @@ DocumentClustering::DocumentClustering(){}
                       {
                           float total = 0;
                           
-                          for (DocumentVector vSpace : _clusterCenter[i].GroupedDocument)
+                          DocumentVector vSpace;
+						  foreachx(_clusterCenter[i].GroupedDocument, vSpace, List) 
                           {
   
-                              total += vSpace.VectorSpace[j];
+                              total += *vSpace.VectorSpace[j];
                              
                           }
                          
@@ -245,3 +241,4 @@ DocumentClustering::DocumentClustering(){}
               return _clusterCenter;
   
           }
+}
