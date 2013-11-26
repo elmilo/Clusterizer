@@ -3,15 +3,15 @@
 #include "Loader.h"
 #include "FrecuenciasPorDocumento.h"
 #include "VectorSpaceModel.h"
-#include <eigen2/Eigen/Core>
+#include <eigen3/Eigen/Core>
 
 #include <iostream>
 
 
 int main(int argc, char **argv){
     
-    string directorio="otrostextos/textosingles";
-    //string directorio="textos";
+    //string directorio="otrostextos/textosingles";
+    string directorio="textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include <eigen2/Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include <math.h>
 
 using namespace std;
