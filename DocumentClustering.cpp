@@ -1,61 +1,45 @@
-class DocumentClustering
-       { 
-       private:
-
-           int globalCounter;
-           int counter;
-
-
-           //FUNCIONES PRIVADAS
-	   bool CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter);
-       	   int FindClosestClusterCenter(List<Centroid> clusterCenter,DocumentVector obj);
-	   List<Centroid> CalculateMeanPoints(List<Centroid> _clusterCenter);
-      	   void FindRSS(List<Centroid> newCentroid, List<Centroid> _clusterCenter);  //NO SE USA EN EL ORIGINAL
-      	   void GenerateRandomNumber(ref HashSet<int> uniqRand, int k, int docCount);
-	   void InitializeClusterCentroid(out List<Centroid> centroid,int count);
-      
-
-      	public:	
-       			List<Centroid>PrepareDocumentCluster(int k, List<DocumentVector> documentCollection,ref int _counter);		
-    	};
-
-
-       	List<Centroid> DocumentClustering::PrepareDocumentCluster(int k, List<DocumentVector> documentCollection,ref int _counter){
+#include "DocumentClustering.h"
+#define foreachx(_type,_iter,_coll) for (_type::iterator _iter = _coll.begin; _iter != _coll.end(); _iter++)
+DocumentClustering::DocumentClustering(){
+       	
+       	list<Centroid> DocumentClustering::PrepareDocumentCluster(int k, list<DocumentVector*> documentCollection,int _counter){
 				
-	       globalCounter = 0;
+				contadorGlobal = 0;
                //prepara k centroides iniciales y asigna un objeto al azar a cada centroide
-               List<Centroid> centroidCollection = new List<Centroid>();
-               Centroid c;
+               list<Centroid> centroidCollection;
+               
                
                /*
                 * Avoid repeation of random number, if same no is generated more than once same document is added to the next cluster 
                 * so avoid it using HasSet collection
                 */
-               HashSet<int> uniqRand = new HashSet<int>();
-               GenerateRandomNumber(ref uniqRand,k,documentCollection.Count);
+               std::vector<int> uniqRand;
+               GenerateRandomNumber(uniqRand[],k,documentCollection.Count);
                
-               foreach(int pos in uniqRand) 
+               int pos;               
+               foreachx(uniqRand, pos, List) 
                {
-                   c = new Centroid();                
-                   c.GroupedDocument = new List<DocumentVector>();
-                   c.GroupedDocument.Add(documentCollection[pos]);
+                   Centroid c;                
+                   c.GroupedDocument = new list<DocumentVector*>();
+                   c.GroupedDocument.Add(documentCollection[*pos]);
                    centroidCollection.Add(c);                
                }
    
                bool stoppingCriteria;
-               List<Centroid> resultSet;
-               List<Centroid> prevClusterCenter;
+               list<Centroid> resultSet;
+               list<Centroid> prevClusterCenter;
                
-               InitializeClusterCentroid(out resultSet, centroidCollection.Count);
+               InitializeClusterCentroid(resultSet, centroidCollection.Count);
    
                do
                {
                    prevClusterCenter = centroidCollection;
    
-                   foreach (DocumentVector obj in documentCollection)
+				   DocumentVector* obj;
+				   foreachx(documentCollection, obj, List) 
                    {
-                       int index = FindClosestClusterCenter(centroidCollection, obj);
-                       resultSet[index].GroupedDocument.Add(obj);
+                       int index = FindClosestClusterCenter(centroidCollection, *obj);
+                       resultSet[index].GroupedDocument.Add(*obj);
                    }
                    InitializeClusterCentroid(out centroidCollection, centroidCollection.Count());
                    centroidCollection = CalculateMeanPoints(resultSet);
@@ -69,7 +53,7 @@ class DocumentClustering
    
                } while (stoppingCriteria == false);
    
-               _counter = counter;
+               _counter = contador;
                return resultSet;
    
            }
@@ -83,30 +67,22 @@ class DocumentClustering
            /// <param name="k"></param>
            /// <param name="docCount"></param>
     
-           void DocumentClustering::GenerateRandomNumber(ref HashSet<int> uniqRand, int k, int docCount)
+           void DocumentClustering::GenerateRandomNumber(vector<int> uniqRand[], int k, int docCount)
            {
                
-               Random r = new Random();
-               
+               srand(time(NULL));
+               int aux = k;
                if (k > docCount)
-              {
-                  do
-                  {
-                      int pos = r.Next(0, docCount);
-                      uniqRand.Add(pos);
-  
-                  } while (uniqRand.Count != docCount);
-              }            
-              else
-              {
-                  do
-                  {
-                      int pos = r.Next(0, docCount);
-                      uniqRand.Add(pos);
-  
-                  } while (uniqRand.Count != k);
-              }
-          }
+               {
+				  aux = docCount;
+				}
+				do
+				{
+				  int pos = (rand()%docCount);
+				  uniqRand.push_back(pos);
+
+				} while (uniqRand.Count != aux);
+			}
   
           /// <summary>
           /// Initialize the result cluster centroid for the next iteration, that holds the result to be returned
@@ -115,12 +91,12 @@ class DocumentClustering
           /// <param name="count"></param>
           void DocumentClustering::InitializeClusterCentroid(out List<Centroid> centroid,int count)
           {
-              Centroid c;
-              centroid = new List<Centroid>();
+			  Centroid c;
+              list<Centroid> centroid;
               for (int i = 0; i < count; i++)
               {
                   c = new Centroid();
-                  c.GroupedDocument = new List<DocumentVector>();
+                  c.GroupedDocument = new list<DocumentVector*>();
                   centroid.Add(c);
               }
   
@@ -133,19 +109,19 @@ class DocumentClustering
           /// <param name="prevClusterCenter"></param>
           /// <param name="newClusterCenter"></param>
           /// <returns></returns>
-          bool DocumentClustering::CheckStoppingCriteria(List<Centroid> prevClusterCenter, List<Centroid> newClusterCenter)
+          bool DocumentClustering::CheckStoppingCriteria(list<Centroid> prevClusterCenter, list<Centroid> newClusterCenter)
           {
               
-              globalCounter++;
-              counter = globalCounter;
-              if (globalCounter > 11000)
+              contadorGlobal++;
+              contador = contadorGlobal;
+              if (contadorGlobal > 11000)
               {
                   return true;
               }
              
               else
               {
-                  Boolean stoppingCriteria;
+                  bool stoppingCriteria;
                   int[] changeIndex = new int[newClusterCenter.Count()]; //1 = centroid has moved 0 == centroid do not moved its position
                   
                   int index = 0;
@@ -203,7 +179,7 @@ class DocumentClustering
           }
   
           //Devuelve el indice del cluster mas cercano
-          int DocumentClustering::FindClosestClusterCenter(List<Centroid> clusterCenter,DocumentVector obj)
+          int DocumentClustering::FindClosestClusterCenter(list<Centroid> clusterCenter,DocumentVector obj)
           {
              
               float[] similarityMeasure = new float[clusterCenter.Count()];
@@ -232,7 +208,7 @@ class DocumentClustering
           }
   
           //Reposicionamiento del centroide
-          List<Centroid> DocumentClustering::CalculateMeanPoints(List<Centroid> _clusterCenter)
+          list<Centroid> DocumentClustering::CalculateMeanPoints(list<Centroid> _clusterCenter)
           {
               
               for (int i = 0; i < _clusterCenter.Count(); i++)
@@ -245,10 +221,11 @@ class DocumentClustering
                       {
                           float total = 0;
                           
-                          foreach (DocumentVector vSpace in _clusterCenter[i].GroupedDocument)
+                          DocumentVector vSpace;
+						  foreachx(_clusterCenter[i].GroupedDocument, vSpace, List) 
                           {
   
-                              total += vSpace.VectorSpace[j];
+                              total += *vSpace.VectorSpace[j];
                              
                           }
                          
@@ -264,17 +241,4 @@ class DocumentClustering
               return _clusterCenter;
   
           }
-          
-
-
-          //ESTO HABRIA QUE SACARLO YA QUE NO ESTA IMPLEMENTADO
-
-          /// <summary>
-          /// Find Residual sum of squares it measures how well a cluster centroid represents the member of their cluster
-          /// We can use the RSS value as stopping criteria of k-means algorithm when decreses in RSS value falls below a 
-          /// threshold t for small t we can terminate the algorithm.
-          /// </summary>
-          void DocumentClustering::FindRSS(List<Centroid> newCentroid, List<Centroid> _clusterCenter) 
-          {
-              //TODO:
-         }
+}

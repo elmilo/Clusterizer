@@ -2,7 +2,7 @@
 #define FRECUENCIASPORDOCUMENTO_H_INCLUDED
 
 class FrecuenciasPorDocumento{
-    unsigned int freq; //guarda la frecuencia en un solo documento
+    float freq; //guarda la frecuencia en un solo documento
 
 public:
 

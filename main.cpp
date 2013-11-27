@@ -2,10 +2,8 @@
 #include "Diccionario.h"
 #include "Loader.h"
 #include "FrecuenciasPorDocumento.h"
-
-
 #include "VectorSpaceModel.h"
-#include "DocumentVector.h"
+#include <eigen3/Eigen/Core>
 
 #include <iostream>
 
@@ -28,6 +26,8 @@ int main(int argc, char **argv){
         }
     }
     
+    for (unsigned i = 0; i<cantidadIDs; i++)
+		std::cout << "docID: " << i << " es:  " << archivosCargados.popDocumento(i) << std::endl;    
     
     
     miDiccionario->mostrar();
@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 //inicializa vector space model
 VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 //genera toda la coleccion de vectores de pesos
-vector<DocumentVector*> matriz=vecSpaceModel.ProcessDocumentCollection();
+vecSpaceModel.procesarDocumentos();
 // muetra todos los vectores, cada vector es un doc   
 vecSpaceModel.mostrarMatriz();
 
