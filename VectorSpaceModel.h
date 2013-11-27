@@ -3,6 +3,7 @@
 
 #include "Diccionario.h"
 #include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -35,16 +36,16 @@ private:
 	//Guarda la cantidad de documentos para la matriz
 	unsigned cantDocs;
 	unsigned cantTerminos;
-	
 	void llenarPalabras();
 	void llenarMatrizConTFIDF();
 	int bbinaria(const std::string unaPalabra);
 	void limpiarMatriz();
 	
 public:
+	void guardarMatriz();
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
-
+	vector<float> getDocumento(int docID);
 	//TEMPORAL:
 	void mostrarMatriz();
 };
