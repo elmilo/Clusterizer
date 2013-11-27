@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 		std::cout << "docID: " << i << " es:  " << archivosCargados.popDocumento(i) << std::endl;    
     
     
-    miDiccionario->mostrar();
+    //miDiccionario->mostrar();
      
 //inicializa vector space model
 VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
@@ -46,7 +46,7 @@ vecSpaceModel.mostrarMatriz();
 	}*/
 	
 cout<<endl;
-vecSpaceModel.guardarMatriz();
+//vecSpaceModel.guardarMatriz();
 
 
 // recuperamos vector 2 del DISCO
@@ -57,7 +57,7 @@ vec= vecSpaceModel.getDocumento(2);
 for (std::vector<float>::iterator it = vec.begin(); it != vec.end(); ++it) 
 		cout<<(*it)<<" ";
 
-delete miDiccionario;
+//delete miDiccionario;
 
 return 0;
 }
