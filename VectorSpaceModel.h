@@ -43,9 +43,14 @@ private:
 	void limpiarMatriz();
 	
 public:
+	VectorSpaceModel();
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
 	//TipoMatriz getMatriz();
+	//Archivo:
+	void guardarMatriz();
+	void getMatriz();
+	vector<float> getDocumento(int docID);
 
 	//TEMPORAL:
 	void mostrarMatriz();
