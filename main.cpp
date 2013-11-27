@@ -44,6 +44,18 @@ vecSpaceModel.mostrarMatriz();
 		(*it)->mostrarVector();
 		cout << endl;
 	}*/
+	
+cout<<endl;
+vecSpaceModel.guardarMatriz();
+
+
+// recuperamos vector 2 del DISCO
+cout<<"doc 2 del disco:";
+vector<float> vec;
+vec= vecSpaceModel.getDocumento(2);
+
+for (std::vector<float>::iterator it = vec.begin(); it != vec.end(); ++it) 
+		cout<<(*it)<<" ";
 
 delete miDiccionario;
 
