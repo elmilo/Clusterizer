@@ -23,7 +23,7 @@ private:
 	typedef struct Nodo {
 		string token;
 		float idf;
-		};
+		} algoparacompletar;
 
 	//Guarda las palabras nuevamente... pensar si no conviene usar el diccionario en vez
 	vector<Nodo> palabras;
@@ -49,6 +49,7 @@ public:
 
 	//TEMPORAL:
 	void mostrarMatriz();
+    Eigen::MatrixXf getMatriz() const;
 };
 
 #endif /* VECTORSPACEMODEL_H_ */

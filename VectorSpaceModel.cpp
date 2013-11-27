@@ -6,8 +6,9 @@ VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, unsigned cantDocume
 	this->miDiccionario = diccionario;
 	this->cantDocs = cantDocuments;
 	this->cantTerminos = miDiccionario->getCantTerminos();
-	//filas = palabras; columnas = docs
-	matriz.resize(cantTerminos,cantDocs);
+	//filas = palabras; columnas = docs al reves!!
+	//matriz.resize(cantTerminos,cantDocs);
+    matriz.resize(cantDocs,cantTerminos);
 }
 
 void VectorSpaceModel::procesarDocumentos(){
@@ -18,8 +19,8 @@ void VectorSpaceModel::procesarDocumentos(){
 
 
 void VectorSpaceModel::limpiarMatriz(){
-	for (unsigned i = 0; i<cantTerminos; i++)
-		for (unsigned j = 0; j<cantDocs; j++)
+	for (unsigned i = 0; i<cantDocs; i++)
+		for (unsigned j = 0; j<cantTerminos; j++)
 			matriz(i,j) = 0;
 }
 
@@ -56,15 +57,20 @@ mapaDelDiccionario::iterator externo;
 
 for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->diccionario.end();
 			externo++) {
-	int posicionPalabra = bbinaria(externo->first); //busca el token
+	int posicionPalabra = bbinaria(externo->first); //busca la posicion del token
 	if (posicionPalabra != -1){
 		for (interno=externo->second.begin(); interno != externo->second.end(); interno++){
 			float idf = palabras[posicionPalabra].idf;
 			int ft = interno->second.getFrecuencia();
-			matriz(posicionPalabra, interno->first )= ft * idf;
+			matriz(interno->first, posicionPalabra)= ft * idf;
 			}
 		}
 	}
+}
+
+
+Eigen::MatrixXf VectorSpaceModel::getMatriz() const { 
+        return matriz; 
 }
 
 	

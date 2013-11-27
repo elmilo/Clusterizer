@@ -4,6 +4,7 @@
 #include "FrecuenciasPorDocumento.h"
 #include "VectorSpaceModel.h"
 #include "kMeans.h"
+
 #include <eigen3/Eigen/Core>
 
 #include <iostream>
@@ -38,7 +39,7 @@ VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 //genera toda la coleccion de vectores de pesos
 vecSpaceModel.procesarDocumentos();
 // muetra todos los vectores, cada vector es un doc   
-vecSpaceModel.mostrarMatriz();
+//vecSpaceModel.mostrarMatriz();
 
 /*for (std::vector<DocumentVector*>::iterator it = matriz.begin();
 			it != matriz.end(); ++it) {
@@ -46,6 +47,15 @@ vecSpaceModel.mostrarMatriz();
 		cout << endl;
 	}*/
 
+    kMeans clusterizando(4);
+    Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
+    clusterizando.agregarPuntos(salida);
+    
+    Eigen::MatrixXf paraMostrar = clusterizando.getPromedios();
+    cout << "Esto es (cant de palabras X cant de clusters: " << endl;
+    
+    cout << paraMostrar.transpose() << endl;
+  
 delete miDiccionario;
 
 return 0;
