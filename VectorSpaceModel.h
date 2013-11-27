@@ -13,12 +13,13 @@
 using namespace std;
 using namespace Eigen;
 
-typedef Matrix<float, Dynamic, Dynamic> TipoMatriz;
+
 
 class VectorSpaceModel {
 	
 	
 private:
+	typedef Matrix<float, Dynamic, Dynamic, RowMajor> TipoMatriz;
 	typedef struct Nodo {
 		string token;
 		float idf;
@@ -44,6 +45,7 @@ private:
 public:
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
+	//TipoMatriz getMatriz();
 
 	//TEMPORAL:
 	void mostrarMatriz();

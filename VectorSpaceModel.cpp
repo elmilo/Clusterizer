@@ -6,7 +6,6 @@ VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, unsigned cantDocume
 	this->miDiccionario = diccionario;
 	this->cantDocs = cantDocuments;
 	this->cantTerminos = miDiccionario->getCantTerminos();
-	
 	//filas = palabras; columnas = docs
 	matriz.resize(cantTerminos,cantDocs);
 }
@@ -38,7 +37,7 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 	
 	frecuenciaAbsoluta =0;
 	for (interno=externo->second.begin(); interno != externo->second.end(); interno++)
-			frecuenciaAbsoluta = frecuenciaAbsoluta + interno->second.getFrecuencia();
+			frecuenciaAbsoluta++;
 	
 	unToken.idf=log10((float)cantDocs / (float)frecuenciaAbsoluta);
 	palabras.push_back(unToken);
@@ -62,7 +61,7 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 		for (interno=externo->second.begin(); interno != externo->second.end(); interno++){
 			float idf = palabras[posicionPalabra].idf;
 			int ft = interno->second.getFrecuencia();
-			matriz(posicionPalabra, interno->first ) = ft * idf;
+			matriz(posicionPalabra, interno->first )= ft * idf;
 			}
 		}
 	}
