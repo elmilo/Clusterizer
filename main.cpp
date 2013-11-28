@@ -28,11 +28,10 @@ int main(int argc, char **argv){
         }
     }
     
-    for (unsigned i = 0; i<cantidadIDs; i++)
-		std::cout << "docID: " << i << " es:  " << archivosCargados.popDocumento(i) << std::endl;    
     
     
-    miDiccionario->mostrar();
+    
+    //miDiccionario->mostrar();
      
 //inicializa vector space model
 VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
@@ -47,14 +46,23 @@ vecSpaceModel.procesarDocumentos();
 		cout << endl;
 	}*/
 
-    kMeans clusterizando(4);
+    kMeans clusterizando(3);
     Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
     clusterizando.agregarPuntos(salida);
     
-    Eigen::MatrixXf paraMostrar = clusterizando.getPromedios();
-    cout << "Esto es (cant de palabras X cant de clusters: " << endl;
+    Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
+    //cout << "Esto es (cant de palabras X cant de clusters): " << endl;
     
-    cout << paraMostrar.transpose() << endl;
+    //cout << paraMostrar.transpose() << endl;
+  
+  for (unsigned r = 0; r < cantidadIDs; r++){
+        std::cout << "docID: " << r << " es:  " << archivosCargados.popDocumento(r) << std::endl;
+        std::cout << "Pertenece al cluster: " << clusterizando.calcularPuntoMasCercano (salida.row(r)) << std::endl;
+        std::cout << std::endl;
+        }
+      
+
+  
   
 delete miDiccionario;
 

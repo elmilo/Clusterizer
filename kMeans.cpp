@@ -19,15 +19,15 @@ kMeans::~kMeans() {};
 
 
 void kMeans::agregarUnPunto(const Eigen::RowVectorXf& unPunto) {
-// Si es el primer punto, se inicializa promedios
+// Si es el primer punto, se inicializa centroides
     if (cantPuntos == 0) {
-        promedios = Eigen::MatrixXf(cantClusters, unPunto.cols());
-        promedios.setRandom();
+        centroides = Eigen::MatrixXf(cantClusters, unPunto.cols());
+        centroides.setRandom();
     }
     // Si hay menos puntos que clusters, asignar un punto al primer
     // cluster vacio (supuestamente hace que corverja mas rapido que si es random)
     if (cantPuntos < cantClusters) {
-        promedios.row(cantPuntos) = unPunto;
+        centroides.row(cantPuntos) = unPunto;
     }
     // calcular el indice mas cercano
     int masCerano = calcularPuntoMasCercano(unPunto);
@@ -35,8 +35,8 @@ void kMeans::agregarUnPunto(const Eigen::RowVectorXf& unPunto) {
     puntosClusters[masCerano] += 1.f;
     cantPuntos++;
     // re calcular promedio
-    promedios.row(masCerano) += 
-      (unPunto - promedios.row(masCerano));// / puntosClusters[masCerano];
+    centroides.row(masCerano) += 
+      (unPunto - centroides.row(masCerano));// / puntosClusters[masCerano];
 };
 
 
@@ -50,7 +50,7 @@ void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
 
 int kMeans::calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const {
 // calcula la distancia desde un punto a cada promedio
-    Eigen::VectorXf normas((promedios - unPunto.replicate(cantClusters, 1)).rowwise().norm());
+    Eigen::VectorXf normas((centroides - unPunto.replicate(cantClusters, 1)).rowwise().norm());
     // encontrar el indice del promedio mas cercano
     int masCercano = -1;
     float min_dist = std::numeric_limits<float>::max(); //le doy un valor muy alto
@@ -64,7 +64,7 @@ return masCercano;
 }
 
 
-Eigen::MatrixXf kMeans::getPromedios() const { 
-        return promedios; 
+Eigen::MatrixXf kMeans::getCentroides() const { 
+        return centroides; 
     };
 

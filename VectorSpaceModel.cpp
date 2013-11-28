@@ -1,6 +1,6 @@
 #include "VectorSpaceModel.h"
 
-using namespace std;
+
 
 VectorSpaceModel::VectorSpaceModel(Diccionario *diccionario, unsigned cantDocuments){
 	this->miDiccionario = diccionario;
@@ -62,7 +62,7 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 		for (interno=externo->second.begin(); interno != externo->second.end(); interno++){
 			float idf = palabras[posicionPalabra].idf;
 			int ft = interno->second.getFrecuencia();
-			matriz(interno->first, posicionPalabra)= ft * idf;
+			matriz(interno->first,posicionPalabra)= ft * idf;
 			}
 		}
 	}
@@ -73,7 +73,7 @@ Eigen::MatrixXf VectorSpaceModel::getMatriz() const {
         return matriz; 
 }
 
-	
+
 int VectorSpaceModel::bbinaria(const std::string unaPalabra){
     int izquierda = 0;
     int derecha = (int)palabras.size()-1;
@@ -92,6 +92,58 @@ int VectorSpaceModel::bbinaria(const std::string unaPalabra){
     return -1;
 }
 	
+/* ************************************************************************************** */
+/*TipoMatriz matrizDesdeArchivo();
+
+void VectorSpaceModel::matrizHaciaArchivo() {
+ofstream out("vectores.dat", ios::out | ios::binary);
+unsigned docActual=0;
+int ft=0;
+int idf=0;
+int pesoCero=0;
+float peso;
+mapaDelDiccionario::iterator externo;
+
+for(int i=0; i<cantDocs;i++){
+for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->diccionario.end(); externo++) {
+
+			listaD::iterator interno = externo->second.find(docActual);
+	
+			if (interno != externo->second.end()){
+					ft = interno->second.getFrecuencia();
+					idf= externo->second.size();
+					peso=(log10((float)cantDocs / (float)idf))*(float)ft;
+					out.write((char *)&peso,4);
+					}
+					else{
+						out.write((char *)&pesoCero,4);
+						}
+			}
+			docActual++;
+		
+}
+out.close();
+
+ofstream Addenda("docIDs.dat", ios::out | ios::binary);
+docIDs.write(cantDocs);
+docIDs.write(cantTerminos);
+}
+
+vector<float> VectorSpaceModel::getDocumento(int docID){
+	vector<float> vecDocumento;
+	float numero;
+	int posDoc;
+	ifstream in("vectores.dat", ios::in | ios::binary);
+	posDoc=docID*cantTerminos*4;
+	in.seekg(posDoc);
+	while(in.tellg()<(posDoc+cantTerminos*4)){
+        in.read((char*)&numero,4);
+        vecDocumento.push_back(numero);
+        }
+	return vecDocumento;
+	}*/
+
+
 //TEMPORAL:
 void VectorSpaceModel::mostrarMatriz() {
 	std::cout << matriz << std::endl;

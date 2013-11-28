@@ -13,13 +13,10 @@
 using namespace std;
 using namespace Eigen;
 
-
-
 class VectorSpaceModel {
-	
-	
+		
 private:
-	typedef Matrix<float, Dynamic, Dynamic, RowMajor> TipoMatriz;
+	
 	typedef struct Nodo {
 		string token;
 		float idf;
@@ -32,7 +29,7 @@ private:
 	Diccionario* miDiccionario;
 	//hay un vector por documento
 
-	TipoMatriz matriz;
+	Eigen::MatrixXf matriz;
 	//Guarda la cantidad de documentos para la matriz
 	unsigned cantDocs;
 	unsigned cantTerminos;
@@ -46,15 +43,17 @@ public:
 	VectorSpaceModel();
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
-	//TipoMatriz getMatriz();
-	//Archivo:
-	void guardarMatriz();
-	void getMatriz();
-	vector<float> getDocumento(int docID);
+	
+	//Entrada/Salida archivo:
+	/*void matrizHaciaArchivo();
+	TipoMatriz matrizDesdeArchivo();
+	
+	vector<float> getDocumento(int docID);*/
 
 	//TEMPORAL:
 	void mostrarMatriz();
-    Eigen::MatrixXf getMatriz() const;
+    	
+	Eigen::MatrixXf getMatriz() const;
 };
 
 #endif /* VECTORSPACEMODEL_H_ */

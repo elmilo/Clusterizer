@@ -12,8 +12,10 @@
 
 class kMeans {
 private:
+    
+
     int cantClusters; // cantidad de clusters
-    Eigen::MatrixXf promedios; // cada fila es el centro de un cluster
+    Eigen::MatrixXf centroides; // cada fila es el centro de un cluster
     std::vector<float> puntosClusters; // cantidad de puntos en cada cluster
     int cantPuntos; // total de puntos agregados
   
@@ -34,7 +36,7 @@ public:
     // calcular cual promedios es el mas cercano a un punto
     int calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const;
 
-    Eigen::MatrixXf getPromedios() const;
+    Eigen::MatrixXf getCentroides() const;
 };
 
 #endif // KMEANS_H
