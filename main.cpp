@@ -50,6 +50,7 @@ vecSpaceModel.procesarDocumentos();
     Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
     //for (int iteraciones=0; iteraciones<500; iteraciones++){
     clusterizando.agregarPuntos(salida);
+    clusterizando.runner();
     //}
     
     Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();

@@ -1,5 +1,5 @@
 #include "kMeans.h"
-#include <iostream>
+
 
 /**
 * Matrix< tipo que guarda, cant filas, cant cols >
@@ -11,7 +11,6 @@ kMeans::kMeans(int n_clusters):
     cantElementosClusters(n_clusters, 0),
     cantPuntos(0) {
     cantIteraciones = 25;
-    primera = false;
     };
 
 
@@ -42,20 +41,12 @@ void kMeans::agregarUnPunto(const Eigen::RowVectorXf& unPunto) {
       (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];
 };
 
+
 void kMeans::imprimirPuntosClusters(){
     for (int i = 0; i<cantClusters; i++)
         std::cout << cantElementosClusters[i] << std::endl;
     }
 
-/*void kMeans::procesar(){
-    for (int iteraciones=0; iteraciones<500; iteraciones++){
-        
-Until there are no changes in any mean
-
-
-end_until 
-    }
-}*/
 
 void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
     cantElementos = static_cast<unsigned>(puntos.cols());
@@ -64,7 +55,7 @@ void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
     for (int r = 0; r < cantPuntosNuevos; r++) {
         agregarUnPunto(puntos.row(r));
     }
-};
+}
 
 
 int kMeans::calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const {
@@ -85,11 +76,13 @@ return masCercano;
 
 Eigen::MatrixXf kMeans::getCentroides() const { 
         return centroides; 
-    };
+    }
+
 
 void kMeans::limpiarNuevosCentroides(){
     nuevosCentroides = Eigen::MatrixXf::Zero(cantClusters, cantElementos);
 }
+
 
 /**
 * The run method essentially creates new centroids. Firstly, it resets the value of n as this counts
@@ -102,88 +95,91 @@ void kMeans::limpiarNuevosCentroides(){
 * It then calls the getClassification method to assign centroids to a classication value, then print
 * output to file.
 */
-public void run(const Eigen::RowVectorXf& unPunto){
+void kMeans:: runner(){
 
-    boolean check = false;
+bool bandera = false;
 
-    while (check == false) {
+while (bandera == false) {
 
-        boolean result = true;
-        this->limpiarNuevosCentroides();
-        for (int i = 0; i < cantClusters; i++) {
-            cantElementosClusters[i] = 0; //resetear valor
-        }
+    bool result = true;
+    this->limpiarNuevosCentroides();
+    for (int cluster = 0; cluster < cantClusters; cluster++) {
+        cantElementosClusters[cluster] = 0; //resetear valores
+    }
+  
+  
+
+    for (unsigned i = 0; i < cantElementos; i++) { 
+        Eigen::RowVectorXf unPunto = centroides.row(i);
+        unsigned alCluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
+
+        cantElementosClusters[alCluster]++;
+        nuevosCentroides.row(alCluster) += (unPunto - nuevosCentroides.row(alCluster));//////posible mejora
+    }
+
+    //finds the average between all datum belonging to certain centroid
+    for (unsigned i = 0; i < cantClusters; i++) {
+ //       for(int j = 0; j < cantElementos; j++) {
+     //       nuevosCentroides(i,j) = nuevosCentroides[i][j] / n(i);
+            nuevosCentroides.row(i) = nuevosCentroides.row(i) / cantElementosClusters[i];
+   //     }
+    }
+    //;
 
 
-        for (int i = 0; i < cantElementos; i++) { //ALL data objects
-            int count = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
-
-            for (int j = 0; j < 6; j++) {
-                newCentroids[count][j] += classifiedData[i][j]; //sums all datum belonging to certain centroid
-            }
-            n[count]++; //counts the no. of members of datum that belong to centroid group
-        }
-
-        //finds the average between all datum belonging to certain centroid
-        for (int i = 0; i < k; i++) {
-            for(int j = 0; j < 6; j++) {
-                newCentroids[i][j] = newCentroids[i][j] / n[i];
-            }
-        }
-
-        //checks if newCentroid values are same as Centroid
-        //If they are then there are no more move groups and no more iterations are needed
-        for (int i = 0; i < k; i++) {
-            for (int j = 0; j < 6; j++) {
-                if(result == true) {
-                    if(newCentroids[i][j] == centroids[i][j]) { //checks for stability
-                        check = true;
-                        result = true;
-                    } else {
-                        check = false;
-                        result = false;
-                    }
+    //banderas if newCentroid values are same as Centroid
+    //If they are then there are no more move groups and no more iterations are needed
+    for (unsigned i = 0; i < cantClusters; i++) {
+        for (unsigned j = 0; j < cantElementos; j++) {
+            if(result == true) {
+                if( abs(nuevosCentroides(i,j) - centroides (i,j)) < 1e-10){
+                //newCentroids[i][j] == centroids[i][j])
+                    bandera = true;
+                    result = true;
+                } else {
+                    bandera = false;
+                    result = false;
                 }
             }
         }
+    }
 
-        centroids = newCentroids;
-        getClassification(classifiedData, centroids);
+    centroides = nuevosCentroides;
+    //getClassification(classifiedData, centroids);
     }
 }
 
 
-
-    /**
+/**
 * Assigns new centroid arrays with a clasification value of 1 or 0. It looks for target
 * (classified) data that are closest to the new centroid being processed and checks to see if the
 * classification value for the classifiedData array being processed is a 1 or a 0 then assigns
 * that classification value to the centroid array being processed.
 */
-    public void getClassification(double[][] datum, double[][] centroid) {
+/*void kMeans::getClassification(double[][] datum, double[][] centroid) {
 
-        int positive = 0; //represents 1
-        int negative = 0; //represents 0
+    int positive = 0; //represents 1
+    int negative = 0; //represents 0
 
-        for (int i = 0; i < centroid.length; i++) {
-            for (int j = 0; j < datum.length; j++) {
-                if (i == getClosestCentroid(datum[j])) { //if data is closest to current newCentroid
-                    if (datum[j][6] == 1) { //count positive or negative
-                        positive++;
-                    } else {
-                        negative++;
-                    }
-                }
-
-                if (positive > negative) { //use counted values to label new centroid
-                    centroid[i][6] = 1;
+    for (int i = 0; i < centroid.length; i++) {
+        for (int j = 0; j < datum.length; j++) {
+            if (i == getClosestCentroid(datum[j])) { //if data is closest to current newCentroid
+                if (datum[j][6] == 1) { //count positive or negative
+                    positive++;
                 } else {
-                    centroid[i][6] = 0;
+                    negative++;
                 }
             }
 
-            positive = 0;
-            negative = 0;
+            if (positive > negative) { //use counted values to label new centroid
+                centroid[i][6] = 1;
+            } else {
+                centroid[i][6] = 0;
+            }
         }
+
+        positive = 0;
+        negative = 0;
     }
-    
+}*/
+

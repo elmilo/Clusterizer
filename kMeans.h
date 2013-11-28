@@ -3,6 +3,8 @@
 
 #include <limits>
 #include <vector>
+#include <cmath>
+#include <iostream>
 #include <eigen3/Eigen/Core>
 
 /**
@@ -21,7 +23,6 @@ private:
     std::vector<unsigned> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
     int cantIteraciones;
-    bool primera;
     // not allowed
     kMeans();
 
@@ -40,6 +41,8 @@ public:
     int calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const;
 
     Eigen::MatrixXf getCentroides() const;
+    
+    void runner();
     
     void imprimirPuntosClusters();
     
