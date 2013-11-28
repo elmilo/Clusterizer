@@ -13,12 +13,15 @@
 class kMeans {
 private:
     
-
-    int cantClusters; // cantidad de clusters
-    Eigen::MatrixXf centroides; // cada fila es el centro de un cluster
-    std::vector<float> puntosClusters; // cantidad de puntos en cada cluster
+    unsigned cantElementos; //Dimension (de las palabras por ejemplo)
+    int cantClusters; // cantidad de clusters que se quieren armar
+    Eigen::MatrixXf centroides; // cada fila es el centroide del cluster
+    Eigen::MatrixXf nuevosCentroides; // cada fila es el centroide del cluster
+    
+    std::vector<unsigned> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
-  
+    int cantIteraciones;
+    bool primera;
     // not allowed
     kMeans();
 
@@ -27,16 +30,20 @@ public:
   
     ~kMeans();
   
-    // agregar un punto y actualiza promedios
+    // agregar un elemento y actualiza centroide
     void agregarUnPunto(const Eigen::RowVectorXf& unPunto);
 
-    // igual que arriba, pero para toda una matriz
+    // igual que arriba, pero para una matriz
     void agregarPuntos(const Eigen::MatrixXf& puntos);    
     
-    // calcular cual promedios es el mas cercano a un punto
+    // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const;
 
     Eigen::MatrixXf getCentroides() const;
+    
+    void imprimirPuntosClusters();
+    
+    void limpiarNuevosCentroides();
 };
 
 #endif // KMEANS_H

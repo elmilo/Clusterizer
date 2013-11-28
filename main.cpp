@@ -21,10 +21,10 @@ int main(int argc, char **argv){
     Diccionario *miDiccionario = new Diccionario;
     
 
-    for (unsigned i = 0; i<cantidadIDs; i++){
-        Tokenizer tokenizer(archivosCargados.popDocumento(i));
+    for (unsigned docID = 0; docID<cantidadIDs; docID++){
+        Tokenizer tokenizer(archivosCargados.popDocumento(docID));
         while (tokenizer.tengaTerminos()){
-            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), i);
+            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), docID);
         }
     }
     
@@ -48,12 +48,14 @@ vecSpaceModel.procesarDocumentos();
 
     kMeans clusterizando(3);
     Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
+    //for (int iteraciones=0; iteraciones<500; iteraciones++){
     clusterizando.agregarPuntos(salida);
+    //}
     
     Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
-    //cout << "Esto es (cant de palabras X cant de clusters): " << endl;
+    cout << "Esto es (cant de palabras X cant de clusters): " << endl;
     
-    //cout << paraMostrar.transpose() << endl;
+    cout << paraMostrar.transpose() << endl;
   
   for (unsigned r = 0; r < cantidadIDs; r++){
         std::cout << "docID: " << r << " es:  " << archivosCargados.popDocumento(r) << std::endl;
@@ -62,7 +64,8 @@ vecSpaceModel.procesarDocumentos();
         }
       
 
-  
+  cout << "\n Puntos clusters: " << endl;
+  clusterizando.imprimirPuntosClusters();
   
 delete miDiccionario;
 
