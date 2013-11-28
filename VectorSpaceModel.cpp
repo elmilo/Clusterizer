@@ -38,14 +38,15 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 	
 	frecuenciaAbsoluta =0;
 	for (interno=externo->second.begin(); interno != externo->second.end(); interno++)
-			frecuenciaAbsoluta = frecuenciaAbsoluta + interno->second.getFrecuencia();
+		//	frecuenciaAbsoluta = frecuenciaAbsoluta + interno->second.getFrecuencia();
+        frecuenciaAbsoluta++;
 	
 	unToken.idf=log10((float)cantDocs / (float)frecuenciaAbsoluta);
 	palabras.push_back(unToken);
 	}
 	
-	/*Para mostrar el vector:
-	 * cout << "idf: \n";
+	/*Para mostrar el vector:*/
+	  /*cout << "idf: \n";
 	for (int i = 0; i<palabras.size(); i++){
 		cout << palabras[i].token << " " << palabras[i].idf << endl;
 		}*/

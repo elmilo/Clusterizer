@@ -10,8 +10,8 @@
 
 int main(int argc, char **argv){
     
-    //string directorio="otrostextos/textosingles";
-    string directorio="textos";
+    string directorio="otrostextos/textosingles";
+    //string directorio="textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
