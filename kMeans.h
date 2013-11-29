@@ -16,14 +16,16 @@ private:
     
     int cantElementos; //Dimension (de las palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
+    int cantVectores; // cantidad de elementos clusterizables (documentos por ejemplo)
+
     Eigen::MatrixXf matrizInicial; // cada fila es el centroide del cluster
     Eigen::MatrixXf centroides; // cada fila es el centroide del cluster
     Eigen::MatrixXf nuevosCentroides; // cada fila es el centroide del cluster
     
     std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
-    int cantIteraciones;
-    bool primera;
+
+
     // not allowed
     kMeans();
 
@@ -48,6 +50,8 @@ public:
     void limpiarNuevosCentroides();
     
     void runner();
+    
+    void runner2();
 };
 
 #endif // KMEANS_H
