@@ -81,7 +81,7 @@ Eigen::MatrixXf kMeans::getCentroides() const {
 
 void kMeans::limpiarNuevosCentroides(){
     nuevosCentroides = Eigen::MatrixXf::Zero(cantClusters, cantElementos);
-    nuevosCentroides.setRandom();
+    //nuevosCentroides.setRandom();
 }
 
 /**
@@ -111,14 +111,25 @@ for (int iter=0; iter<6; iter++){
 
 
         for (int i = 0; i < cantClusters; i++) { //ALL data objects
-            Eigen::RowVectorXf unPunto = matrizInicial.row(i);
+            Eigen::RowVectorXf unPunto = matrizInicial.row(i);//creo que esta matriz es más grande que clusters
+            std::cout << "\n\n En runner: \n" << std::endl;
+            std::cout << "\n matrizInicialrow(i): "<< i << std::endl;
+            std::cout << matrizInicial.row(i) << std::endl;
+            
+            for (int k = 0; k<cantClusters; k++)
+                std::cout << "k= "<< k << " tiene: " <<cantElementosClusters[k] << std::endl;
+            
+            std::cout << "\n nuevos centroides: " << std::endl;
+            std::cout << nuevosCentroides << std::endl;
+            std::cout << "\n" << std::endl;
+            
             int cluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
+            cantElementosClusters[cluster]++; //counts the no. of members of datum that belong to centroid group
 
             for (int j = 0; j < cantElementos; j++) {
-                nuevosCentroides(cluster,j) += (unPunto(j) - centroides(cluster,j)); //sums all datum belonging to certain centroid
+                nuevosCentroides(cluster,j) += matrizInicial(i,j); //sums all datum belonging to certain centroid
                 
             }
-            cantElementosClusters[cluster]++; //counts the no. of members of datum that belong to centroid group
         }
 
         //finds the average between all datum belonging to certain centroid
@@ -143,8 +154,8 @@ for (int iter=0; iter<6; iter++){
                 }
             }
         }*/
-    std::cout << nuevosCentroides.traspose() << std::endl;
+    std::cout << nuevosCentroides.transpose() << std::endl;
     std::cout << std::endl;
-        //centroides = nuevosCentroides;
+    centroides = nuevosCentroides;
     }
 }
