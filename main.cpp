@@ -45,14 +45,13 @@ vecSpaceModel.procesarDocumentos();
 		(*it)->mostrarVector();
 		cout << endl;
 	}*/
-
-    kMeans clusterizando(3);
+    int nClusters = 3;
+    kMeans clusterizando(nClusters);
     Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
-    //for (int iteraciones=0; iteraciones<500; iteraciones++){
+/**************************************************/
     clusterizando.agregarPuntos(salida);
     clusterizando.runner();
-    //}
-    
+/**************************************************/
     Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
     cout << "Esto es (cant de palabras X cant de clusters): " << endl;
     

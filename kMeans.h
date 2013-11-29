@@ -3,8 +3,7 @@
 
 #include <limits>
 #include <vector>
-#include <cmath>
-#include <iostream>
+#include <cmath> 
 #include <eigen3/Eigen/Core>
 
 /**
@@ -15,14 +14,16 @@
 class kMeans {
 private:
     
-    unsigned cantElementos; //Dimension (de las palabras por ejemplo)
+    int cantElementos; //Dimension (de las palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
+    Eigen::MatrixXf matrizInicial; // cada fila es el centroide del cluster
     Eigen::MatrixXf centroides; // cada fila es el centroide del cluster
     Eigen::MatrixXf nuevosCentroides; // cada fila es el centroide del cluster
     
-    std::vector<unsigned> cantElementosClusters; // cantidad de elementos en cada cluster
+    std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
     int cantIteraciones;
+    bool primera;
     // not allowed
     kMeans();
 
@@ -42,11 +43,11 @@ public:
 
     Eigen::MatrixXf getCentroides() const;
     
-    void runner();
-    
     void imprimirPuntosClusters();
     
     void limpiarNuevosCentroides();
+    
+    void runner();
 };
 
 #endif // KMEANS_H
