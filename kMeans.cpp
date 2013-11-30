@@ -11,7 +11,7 @@ kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters),
     cantElementosClusters(n_clusters, 0),
     cantPuntos(0){
-        TOLERANCIA = 1e-20;
+        TOLERANCIA = 1e-10;
         this->matrizInicial = matriz;
         cantElementos = static_cast<unsigned>(matriz.cols());
         cantVectores = static_cast<int>(matriz.rows());
@@ -75,9 +75,13 @@ void kMeans::limpiarNuevosCentroides(){
 
 
 void kMeans::Clasificar(){
-           /*for (int j = 0; j < cantVectores; j++){
-           TipoVectorFila otroPunto = matrizInicial.row(j);
-           if (alCluster == calcularPuntoMasCercano(otroPunto))*/
+    int alCluster = -1;
+
+    for (int j = 0; j < cantVectores; j++){
+        TipoVectorFila otroPunto = matrizInicial.row(j);
+        alCluster = calcularPuntoMasCercano(otroPunto);
+        clasificados[j] = alCluster;
+    }
 }
 
 
@@ -87,8 +91,8 @@ this->Inicializacion();
 
 bool bandera = false;
 unsigned iter = 0;
-//while (bandera == false) {
-for (int iterac=0; iterac<150; iterac++){
+while (bandera == false) {
+//for (int iterac=0; iterac<150; iterac++){
     iter++;
     bool result = true;
     this->limpiarNuevosCentroides();

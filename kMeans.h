@@ -9,10 +9,6 @@
 
 #include "TiposGlobales.h"
 
-//#define EIGEN_DEFAULT_IO_FORMAT Eigen::IOFormat(Eigen::StreamPrecision, 0, ", ", " ", "", "")
-
-//#define EIGEN_DEFAULT_IO_FORMAT Eigen::IOFormat(Eigen::FullPrecision)
-
 /**
 * Matrix< tipo que guarda, cant filas, cant cols >
 * 
@@ -33,6 +29,7 @@ private:
     TipoMatriz dataOrdenada; // guarda a que cluster pertenece cada elemento clusterizable
     
     std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
+    std::vector<int> clasificados; // [elementos clusterizables] -> el cluster a donde pertenecen
     int cantPuntos; // total de puntos agregados
 
 
@@ -43,7 +40,7 @@ private:
     
     void Inicializacion();
     
-    void Clasificar();
+    void Clasificar();//No funciona
     
     void Randomize(TipoMatriz& matrizCentroides);
 
