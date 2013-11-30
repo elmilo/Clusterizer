@@ -5,11 +5,7 @@
 #include <vector>
 #include <cmath> 
 #include <iostream>
-
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>
-
-#define FORMATOSALIDA FormatoImpresion(Eigen::StreamPrecision, 0, "; ", "\n", "", "");
+#include <random>
 
 #include "TiposGlobales.h"
 
@@ -25,15 +21,16 @@
 class kMeans {
 private:
     
-    const static TipoGuardado TOLERANCIA = 1e-2;
+    TipoGuardado TOLERANCIA;
     
     int cantElementos; //Dimension (de las palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
     int cantVectores; // cantidad de elementos clusterizables (documentos por ejemplo)
 
-    TipoMatriz matrizInicial; // cada fila es el centroide del cluster
+    TipoMatriz matrizInicial; // guarda la matriz de datos
     TipoMatriz centroides; // cada fila es el centroide del cluster
-    TipoMatriz nuevosCentroides; // cada fila es el centroide del cluster
+    TipoMatriz nuevosCentroides; // idem
+    TipoMatriz dataOrdenada; // guarda a que cluster pertenece cada elemento clusterizable
     
     std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
@@ -45,17 +42,18 @@ private:
     void limpiarNuevosCentroides();
     
     void Inicializacion();
+    
+    void Clasificar();
+    
+    void Randomize(TipoMatriz& matrizCentroides);
 
 public:
     
 
-    kMeans(int n_clusters);
+    kMeans(const TipoMatriz& matriz, int n_clusters);
   
     ~kMeans();
   
-    // igual que arriba, pero para una matriz
-    void asignarMatriz(const TipoMatriz& matriz);    
-    
     // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
 
@@ -64,8 +62,6 @@ public:
     void imprimirPuntosClusters();
     
     void runner();
-    
-    void runner2();
 };
 
 #endif // KMEANS_H

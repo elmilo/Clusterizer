@@ -29,49 +29,38 @@ int main(int argc, char **argv){
     }
     
     
-    
-    
-    //miDiccionario->mostrar();
-     
-//inicializa vector space model
-VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
-//genera toda la coleccion de vectores de pesos
-vecSpaceModel.procesarDocumentos();
-// muetra todos los vectores, cada vector es un doc   
-//vecSpaceModel.mostrarMatriz();
+    //inicializa vector space model
+    VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 
-/*for (std::vector<DocumentVector*>::iterator it = matriz.begin();
-			it != matriz.end(); ++it) {
-		(*it)->mostrarVector();
-		cout << endl;
-	}*/
+    //genera toda la coleccion de vectores de pesos
+    vecSpaceModel.procesarDocumentos();
 
-    kMeans clusterizando(3);
-    TipoMatriz salida = vecSpaceModel.getMatriz();
-    //for (int iteraciones=0; iteraciones<500; iteraciones++){
-    clusterizando.asignarMatriz(salida);
-    clusterizando.runner2();
-    //}
+
     
-    //Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
-    //cout << "Esto es (cant de palabras X cant de clusters): " << endl;
+    TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
+    kMeans clusterizando(matrizVecSpace,3);
     
-    //cout << paraMostrar.transpose() << endl;
-  
-  for (unsigned r = 0; r < cantidadIDs; r++){
-        std::cout << "docID: " << r << " es:  " << archivosCargados.popDocumento(r) << std::endl;
-        std::cout << "Pertenece al cluster: " << clusterizando.calcularPuntoMasCercano (salida.row(r)) << std::endl;
+    for (int iteraciones=0; iteraciones<15; iteraciones++){
+    cout << "*********************************************************** " << endl;
+    cout << "Iteracion : " << iteraciones << endl;
+    
+    clusterizando.runner();
+    
+      for (unsigned r = 0; r < cantidadIDs; r++){
+        std::cout << "docID: " << r << " es:  " 
+                            << archivosCargados.popDocumento(r) << std::endl;
+        std::cout << "Pertenece al cluster: " 
+                << clusterizando.calcularPuntoMasCercano (matrizVecSpace.row(r)) << std::endl;
         std::cout << std::endl;
         }
-      
 
-  cout << "\n Puntos clusters: " << endl;
-  clusterizando.imprimirPuntosClusters();
 
-    //cout << "Esto es (cant de palabras X docs): " << endl;
-    
-    //cout << salida.transpose() << endl;
-    
+    cout << "\n Puntos clusters: " << endl;
+    clusterizando.imprimirPuntosClusters();
+    cout << "***********************------------------************************* \n\n" << endl;
+    }
+
+
 delete miDiccionario;
 
 return 0;

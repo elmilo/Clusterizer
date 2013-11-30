@@ -1,5 +1,5 @@
 OBJ = main.o Diccionario.o Loader.o Tokenizer.o FrecuenciasPorDocumento.o VectorSpaceModel.o kMeans.o
-CXXFLAGS = -fmessage-length=0 -Wall
+CXXFLAGS = -fmessage-length=0 -Wall -std=gnu++11
 #CXXDEBUG = -O0 -g3
 CXXRELEASE = -O3
 #LDFLAGS= -m32
