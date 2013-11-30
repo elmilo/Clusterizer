@@ -12,7 +12,7 @@ CXXRELEASE = -O3
 release: CXX += $(CXXRELEASE)
 release: clusterizer
 
-kMeans.o: kMeans.cpp kMeans.h
+kMeans.o: kMeans.cpp kMeans.h 
 	g++ $(CXXFLAGS) -c kMeans.cpp
 
 FrecuenciasPorDocumento.o: FrecuenciasPorDocumento.cpp FrecuenciasPorDocumento.h

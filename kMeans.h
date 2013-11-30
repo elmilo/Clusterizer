@@ -4,7 +4,9 @@
 #include <limits>
 #include <vector>
 #include <cmath> 
-#include <eigen3/Eigen/Core>
+#include <iostream>
+
+#include "TiposGlobales.h"
 
 /**
 * Matrix< tipo que guarda, cant filas, cant cols >
@@ -13,14 +15,15 @@
 
 class kMeans {
 private:
+    const static TipoGuardado TOLERANCIA = 1e-2;
     
     int cantElementos; //Dimension (de las palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
     int cantVectores; // cantidad de elementos clusterizables (documentos por ejemplo)
 
-    Eigen::MatrixXf matrizInicial; // cada fila es el centroide del cluster
-    Eigen::MatrixXf centroides; // cada fila es el centroide del cluster
-    Eigen::MatrixXf nuevosCentroides; // cada fila es el centroide del cluster
+    TipoMatriz matrizInicial; // cada fila es el centroide del cluster
+    TipoMatriz centroides; // cada fila es el centroide del cluster
+    TipoMatriz nuevosCentroides; // cada fila es el centroide del cluster
     
     std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
     int cantPuntos; // total de puntos agregados
@@ -30,20 +33,22 @@ private:
     kMeans();
 
 public:
+    
+
     kMeans(int n_clusters);
   
     ~kMeans();
   
     // agregar un elemento y actualiza centroide
-    void agregarUnPunto(const Eigen::RowVectorXf& unPunto);
+    void agregarUnPunto(const TipoVectorFila& unPunto);
 
     // igual que arriba, pero para una matriz
-    void agregarPuntos(const Eigen::MatrixXf& puntos);    
+    void agregarPuntos(const TipoMatriz& puntos);    
     
     // calcular cual centroide es el mas cercano a un punto
-    int calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const;
+    int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
 
-    Eigen::MatrixXf getCentroides() const;
+    TipoMatriz getCentroides() const;
     
     void imprimirPuntosClusters();
     

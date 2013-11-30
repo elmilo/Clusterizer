@@ -40,7 +40,7 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 	for (interno=externo->second.begin(); interno != externo->second.end(); interno++)
 			frecuenciaAbsoluta++;
 	
-	unToken.idf=log10((float)cantDocs / (float)frecuenciaAbsoluta);
+	unToken.idf=log10((TipoGuardado)cantDocs / (TipoGuardado)frecuenciaAbsoluta);
 	palabras.push_back(unToken);
 	}
 	
@@ -60,16 +60,16 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 	int posicionPalabra = bbinaria(externo->first); //busca la posicion del token
 	if (posicionPalabra != -1){
 		for (interno=externo->second.begin(); interno != externo->second.end(); interno++){
-			float idf = palabras[posicionPalabra].idf;
+			TipoGuardado idf = palabras[posicionPalabra].idf;
 			int ft = interno->second.getFrecuencia();
-			matriz(interno->first,posicionPalabra)= ft * idf;
+			matriz(interno->first,posicionPalabra)= (TipoGuardado) ft * idf;
 			}
 		}
 	}
 }
 
 
-Eigen::MatrixXf VectorSpaceModel::getMatriz() const { 
+TipoMatriz VectorSpaceModel::getMatriz() const { 
         return matriz; 
 }
 
@@ -101,7 +101,7 @@ unsigned docActual=0;
 int ft=0;
 int idf=0;
 int pesoCero=0;
-float peso;
+TipoGuardado peso;
 mapaDelDiccionario::iterator externo;
 
 for(int i=0; i<cantDocs;i++){
@@ -112,7 +112,7 @@ for (externo = miDiccionario->diccionario.begin(); externo != miDiccionario->dic
 			if (interno != externo->second.end()){
 					ft = interno->second.getFrecuencia();
 					idf= externo->second.size();
-					peso=(log10((float)cantDocs / (float)idf))*(float)ft;
+					peso=(log10((TipoGuardado)cantDocs / (TipoGuardado)idf))*(TipoGuardado)ft;
 					out.write((char *)&peso,4);
 					}
 					else{
@@ -129,9 +129,9 @@ docIDs.write(cantDocs);
 docIDs.write(cantTerminos);
 }
 
-vector<float> VectorSpaceModel::getDocumento(int docID){
-	vector<float> vecDocumento;
-	float numero;
+vector<TipoGuardado> VectorSpaceModel::getDocumento(int docID){
+	vector<TipoGuardado> vecDocumento;
+	TipoGuardado numero;
 	int posDoc;
 	ifstream in("vectores.dat", ios::in | ios::binary);
 	posDoc=docID*cantTerminos*4;

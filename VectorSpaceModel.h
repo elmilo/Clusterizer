@@ -7,11 +7,12 @@
 #include <string>
 #include <vector>
 
-#include <eigen3/Eigen/Dense>
 #include <math.h>
 
+#include "TiposGlobales.h"
+
 using namespace std;
-using namespace Eigen;
+//using namespace Eigen;
 
 class VectorSpaceModel {
 		
@@ -19,7 +20,7 @@ private:
 	
 	typedef struct Nodo {
 		string token;
-		float idf;
+		TipoGuardado idf;
 		} algoparacompletar;
 
 	//Guarda las palabras nuevamente... pensar si no conviene usar el diccionario en vez
@@ -29,7 +30,7 @@ private:
 	Diccionario* miDiccionario;
 	//hay un vector por documento
 
-	Eigen::MatrixXf matriz;
+	TipoMatriz matriz;
 	//Guarda la cantidad de documentos para la matriz
 	unsigned cantDocs;
 	unsigned cantTerminos;
@@ -48,12 +49,12 @@ public:
 	/*void matrizHaciaArchivo();
 	TipoMatriz matrizDesdeArchivo();
 	
-	vector<float> getDocumento(int docID);*/
+	vector<TipoGuardado> getDocumento(int docID);*/
 
 	//TEMPORAL:
 	void mostrarMatriz();
     	
-	Eigen::MatrixXf getMatriz() const;
+	TipoMatriz getMatriz() const;
 };
 
 #endif /* VECTORSPACEMODEL_H_ */

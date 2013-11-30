@@ -1,5 +1,5 @@
 #include "kMeans.h"
-#include <iostream>
+
 
 /**
 * Matrix< tipo que guarda, cant filas, cant cols >
@@ -12,14 +12,12 @@ kMeans::kMeans(int n_clusters):
     cantPuntos(0){
     };
 
-
 kMeans::kMeans() {};
-
 
 kMeans::~kMeans() {};
 
 
-void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
+void kMeans::agregarPuntos(const TipoMatriz& puntos) {
 	this->matrizInicial = puntos;
     cantElementos = static_cast<unsigned>(matrizInicial.cols());
     cantVectores = static_cast<int>(puntos.rows());
@@ -30,12 +28,12 @@ void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
     }
 }
 
-/*void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
+/*void kMeans::agregarPuntos(const TipoMatriz& puntos) {
 
     cantElementos = static_cast<int>(puntos.cols());
     cantvectores = static_cast<int>(puntos.rows());
     
-    matrizInicial = Eigen::MatrixXf(cantvectores, cantElementos);
+    matrizInicial = TipoMatriz(cantvectores, cantElementos);
     matrizInicial = puntos;
     
     for (int r = 0; r < cantvectores; r++) {
@@ -44,17 +42,21 @@ void kMeans::agregarPuntos(const Eigen::MatrixXf& puntos) {
 }*/
 
 
-void kMeans::agregarUnPunto(const Eigen::RowVectorXf& unPunto) {
+void kMeans::agregarUnPunto(const TipoVectorFila& unPunto) {
 // Si es el primer elemento, se inicializa centroides
     if (cantPuntos == 0) {
-        centroides = Eigen::MatrixXf(cantClusters, cantElementos);
+        this->centroides = TipoMatriz(cantClusters, cantElementos);
         centroides.setRandom();
+        std::cout<< "centroides incialesss: " << std::endl;
+        std::cout<<centroides<< std::endl;
+        
+        //this->inicializarCentroidesRand(this->centroides);
     }
     // Si hay menos elementos que clusters, asignar un punto al primer
     // cluster vacio (supuestamente hace que corverja mas rapido que si es random)
-    if (cantPuntos < cantClusters) {
+    /*if (cantElementos < cantClusters) {
         centroides.row(cantPuntos) = unPunto;
-    }
+    }*/
     
     int masCerano = calcularPuntoMasCercano(unPunto);
     // incrementar cantidad de elementos
@@ -66,18 +68,35 @@ void kMeans::agregarUnPunto(const Eigen::RowVectorXf& unPunto) {
 };
 
 
-int kMeans::calcularPuntoMasCercano(const Eigen::RowVectorXf& unPunto) const {
+int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
 // calcula la distancia desde un punto a cada promedio
-    Eigen::VectorXf normas((centroides - unPunto.replicate(cantClusters, 1)).rowwise().norm());
-    // encontrar el indice del centroide mas cercano
+//
+
+std::cout<< "/**************** CALCULANDO MAS CERCANO****************************/ " << std::endl;
+/*std::cout<< "centroides: " << std::endl;
+std::cout<<centroides<< std::endl;
+std::cout<< "punto: " << std::endl;
+std::cout<<unPunto<< std::endl;*/
+
+    TipoVectorColumna normas((centroides - unPunto.replicate(cantClusters, 1)).rowwise().norm());
+    //encontrar el indice del centroide mas cercano
+    /*std::cout<< "Distancias: " << std::endl;
+    std::cout<< normas << std::endl;*/
+
+    
+
+
+    
     int masCercano = -1;
-    float min_dist = std::numeric_limits<float>::max(); //le doy un valor muy alto
+    TipoGuardado min_dist = std::numeric_limits<TipoGuardado>::max(); //le doy un valor muy alto
     for (int m = 0; m < cantClusters; m++) {
         if (normas(m) < min_dist) {
             min_dist = normas(m);
             masCercano = m;
         }
     }
+    std::cout<< "Cluster más cercano: " <<  masCercano << std::endl;
+    //std::cout<< "/******************-----------------------------****************/ \n" << std::endl;
 return masCercano;
 }
 
@@ -88,13 +107,13 @@ void kMeans::imprimirPuntosClusters(){
     }
     
 
-Eigen::MatrixXf kMeans::getCentroides() const { 
+TipoMatriz kMeans::getCentroides() const { 
         return centroides; 
     };
 
 void kMeans::limpiarNuevosCentroides(){
-    nuevosCentroides = Eigen::MatrixXf::Zero(cantClusters, cantElementos);
-    //nuevosCentroides.setRandom();
+    nuevosCentroides = TipoMatriz::Zero(cantClusters, cantElementos);
+    nuevosCentroides.setRandom();
 }
 
 /**
@@ -111,9 +130,10 @@ void kMeans::limpiarNuevosCentroides(){
 void kMeans::runner(){
 
     bool bandera = false;
-for (int iter=0; iter<100; iter++){
+    unsigned iter = 0;
+for (int ju=0; ju<25; ju++){
     //while (bandera == false) {
-
+    iter++;
         bool resultado = true;
         
         this->limpiarNuevosCentroides();
@@ -124,7 +144,7 @@ for (int iter=0; iter<100; iter++){
 
 
         for (int r1 = 0; r1 < cantVectores; r1++) { //ALL data objects
-            Eigen::RowVectorXf unPunto = matrizInicial.row(r1);
+            TipoVectorFila unPunto = matrizInicial.row(r1);
             /*std::cout << "\n\n En runner: \n" << std::endl;
             std::cout << "\n matrizInicialrow(i): "<< i << std::endl;
             std::cout << matrizInicial.row(i) << std::endl;
@@ -138,7 +158,7 @@ for (int iter=0; iter<100; iter++){
             
             int alCluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
             cantElementosClusters[alCluster]++; //counts the no. of members of datum that belong to centroid group
-           //nuevosCentroides.row(alCluster) += (unPunto - nuevosCentroides.row(cluster));
+           //nuevosCentroides.row(alCluster) += unPunto;// - nuevosCentroides.row(alCluster));
             
             for (int j = 0; j < cantElementos; j++) {
                 nuevosCentroides(alCluster,j) += matrizInicial(r1,j); //sums all datum belonging to certain centroid
@@ -158,10 +178,10 @@ for (int iter=0; iter<100; iter++){
 
         //checks if newCentroid values are same as Centroid
         //If they are then there are no more move groups and no more iterations are needed
-        /*for (int i = 0; i < cantClusters; i++) {
+        for (int i = 0; i < cantClusters; i++) {
             for (int j = 0; j < cantElementos; j++) {
                 if(resultado == true) {
-                    if(std::abs(nuevosCentroides(i,j) - centroides(i,j)) < 0.0001) { //checks for stability
+                    if(std::abs(nuevosCentroides(i,j) - centroides(i,j)) < TOLERANCIA) { //checks for stability
                         bandera = true;
                         resultado = true;
                     } else {
@@ -170,8 +190,11 @@ for (int iter=0; iter<100; iter++){
                     }
                 }
             }
-        }*/
-    std::cout << nuevosCentroides.transpose() << std::endl;
+        }
+    
+    std::cout<< "Nuevos centroides: " << std::endl;
+    std::cout << nuevosCentroides << std::endl;
+    std::cout << "iteraciones: "<< iter <<std::endl;
     std::cout << std::endl;
     centroides = nuevosCentroides;
     }
@@ -181,35 +204,38 @@ for (int iter=0; iter<100; iter++){
 void kMeans::runner2(){
 
 bool bandera = false;
-
+unsigned iter = 0;
 //while (bandera == false) {
-for (int iter=0; iter<200; iter++){
+for (int ju=0; ju<25; ju++){
+    iter++;
+//for (int iter=0; iter<200; iter++){
     bool result = true;
     this->limpiarNuevosCentroides();
-    for (int cluster = 0; cluster < cantClusters; cluster++) {
-        cantElementosClusters[cluster] = 0; //resetear valores
+    for (int i = 0; i < cantClusters; i++) {
+        cantElementosClusters[i] = 1; //resetear valores
     }
   
     for (unsigned i = 0; i < cantVectores; i++) { //cantClusters
-        Eigen::RowVectorXf unPunto = matrizInicial.row(i);
+        TipoVectorFila unPunto = matrizInicial.row(i);
         unsigned alCluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
 
-        cantElementosClusters[alCluster]++;
-       // nuevosCentroides.row(alCluster) += (unPunto - nuevosCentroides.row(alCluster));//////posible mejora
-        for (int j = 0; j < cantElementos; j++) {
-                nuevosCentroides(alCluster,j) += matrizInicial(i,j); //sums all datum belonging to certain centroid
-                
+        //nuevosCentroides.row(alCluster) += (unPunto - nuevosCentroides.row(alCluster));//////posible mejora
+       for (int j = 0; j < cantVectores; j++) {
+           TipoVectorFila otroPunto = matrizInicial.row(j);
+           if (alCluster == calcularPuntoMasCercano(otroPunto));
+                nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster)); //sums all datum belonging to certain centroid
+                //newCentroids[count][j] += classifiedData[i][j]; //sums all datum belonging to certain centroid
             }
+        
+        cantElementosClusters[alCluster]++;
     }
-
+    
+    /*centroides.row(masCerano) += 
+      (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];*/
+      
     //finds the average between all datum belonging to certain centroid
-    for (unsigned i = 0; i < cantClusters; i++) {
- //       for(int j = 0; j < cantElementos; j++) {
-     //       nuevosCentroides(i,j) = nuevosCentroides[i][j] / n(i);
+    for (unsigned i = 0; i < cantClusters; i++) 
             nuevosCentroides.row(i) = nuevosCentroides.row(i) / cantElementosClusters[i];
-   //     }
-    }
-    //;
 
 
     //banderas if newCentroid values are same as Centroid
@@ -217,7 +243,7 @@ for (int iter=0; iter<200; iter++){
     for (unsigned i = 0; i < cantClusters; i++) {
         for (unsigned j = 0; j < cantElementos; j++) {
             if(result == true) {
-                if( abs(nuevosCentroides(i,j) - centroides (i,j)) < 1e-15){
+                if( abs(nuevosCentroides(i,j) - centroides (i,j)) < TOLERANCIA){
                 //newCentroids[i][j] == centroids[i][j])
                     bandera = true;
                     result = true;
@@ -228,8 +254,14 @@ for (int iter=0; iter<200; iter++){
             }
         }
     }
-
+    
+    std::cout<< "Nuevos centroides: " << std::endl;
+    std::cout << nuevosCentroides << std::endl;
+    std::cout << "iteraciones: "<< iter <<std::endl;
+    std::cout << std::endl;
     centroides = nuevosCentroides;
+    
+    
     //getClassification(classifiedData, centroids);
     }
 }

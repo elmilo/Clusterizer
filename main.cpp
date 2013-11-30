@@ -8,7 +8,7 @@
 #include <eigen3/Eigen/Core>
 
 #include <iostream>
-
+#include "TiposGlobales.h"
 
 int main(int argc, char **argv){
     
@@ -47,16 +47,16 @@ vecSpaceModel.procesarDocumentos();
 	}*/
 
     kMeans clusterizando(3);
-    Eigen::MatrixXf salida = vecSpaceModel.getMatriz();
+    TipoMatriz salida = vecSpaceModel.getMatriz();
     //for (int iteraciones=0; iteraciones<500; iteraciones++){
     clusterizando.agregarPuntos(salida);
     clusterizando.runner2();
     //}
     
-    Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
-    cout << "Esto es (cant de palabras X cant de clusters): " << endl;
+    //Eigen::MatrixXf paraMostrar = clusterizando.getCentroides();
+    //cout << "Esto es (cant de palabras X cant de clusters): " << endl;
     
-    cout << paraMostrar.transpose() << endl;
+    //cout << paraMostrar.transpose() << endl;
   
   for (unsigned r = 0; r < cantidadIDs; r++){
         std::cout << "docID: " << r << " es:  " << archivosCargados.popDocumento(r) << std::endl;
@@ -67,7 +67,11 @@ vecSpaceModel.procesarDocumentos();
 
   cout << "\n Puntos clusters: " << endl;
   clusterizando.imprimirPuntosClusters();
-  
+
+    //cout << "Esto es (cant de palabras X docs): " << endl;
+    
+    //cout << salida.transpose() << endl;
+    
 delete miDiccionario;
 
 return 0;
