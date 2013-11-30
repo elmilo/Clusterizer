@@ -6,7 +6,16 @@
 #include <cmath> 
 #include <iostream>
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>
+
+#define FORMATOSALIDA FormatoImpresion(Eigen::StreamPrecision, 0, "; ", "\n", "", "");
+
 #include "TiposGlobales.h"
+
+//#define EIGEN_DEFAULT_IO_FORMAT Eigen::IOFormat(Eigen::StreamPrecision, 0, ", ", " ", "", "")
+
+//#define EIGEN_DEFAULT_IO_FORMAT Eigen::IOFormat(Eigen::FullPrecision)
 
 /**
 * Matrix< tipo que guarda, cant filas, cant cols >
@@ -15,6 +24,7 @@
 
 class kMeans {
 private:
+    
     const static TipoGuardado TOLERANCIA = 1e-2;
     
     int cantElementos; //Dimension (de las palabras por ejemplo)
@@ -31,6 +41,10 @@ private:
 
     // not allowed
     kMeans();
+    
+    void limpiarNuevosCentroides();
+    
+    void Inicializacion();
 
 public:
     
@@ -39,11 +53,8 @@ public:
   
     ~kMeans();
   
-    // agregar un elemento y actualiza centroide
-    void agregarUnPunto(const TipoVectorFila& unPunto);
-
     // igual que arriba, pero para una matriz
-    void agregarPuntos(const TipoMatriz& puntos);    
+    void asignarMatriz(const TipoMatriz& matriz);    
     
     // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
@@ -51,8 +62,6 @@ public:
     TipoMatriz getCentroides() const;
     
     void imprimirPuntosClusters();
-    
-    void limpiarNuevosCentroides();
     
     void runner();
     

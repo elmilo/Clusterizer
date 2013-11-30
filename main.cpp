@@ -49,7 +49,7 @@ vecSpaceModel.procesarDocumentos();
     kMeans clusterizando(3);
     TipoMatriz salida = vecSpaceModel.getMatriz();
     //for (int iteraciones=0; iteraciones<500; iteraciones++){
-    clusterizando.agregarPuntos(salida);
+    clusterizando.asignarMatriz(salida);
     clusterizando.runner2();
     //}
     

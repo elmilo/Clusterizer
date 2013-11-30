@@ -16,16 +16,37 @@ kMeans::kMeans() {};
 
 kMeans::~kMeans() {};
 
-
-void kMeans::agregarPuntos(const TipoMatriz& puntos) {
-	this->matrizInicial = puntos;
-    cantElementos = static_cast<unsigned>(matrizInicial.cols());
-    cantVectores = static_cast<int>(puntos.rows());
+void kMeans::Inicializacion(){
+    Eigen::IOFormat FORMATOSALIDA;
     
-    int cantPuntosNuevos = static_cast<int>(matrizInicial.rows());
-    for (int r = 0; r < cantPuntosNuevos; r++) {
+    this->centroides = TipoMatriz(cantClusters, cantElementos);
+    int unaPosicion;
+    srand (time(NULL));
+    
+    this->centroides = TipoMatriz(cantClusters, cantElementos);
+
+    for (int i = 0; i<cantClusters; i++){
+        unaPosicion = rand() % cantVectores + 1;
+        centroides.row(i) = matrizInicial.row(unaPosicion);
+        }
+    std::cout<< "centroides incialesss: " << std::endl;
+    std::cout<<centroides.format(FormatoImpresion)<< std::endl;
+
+}
+
+
+void kMeans::asignarMatriz(const TipoMatriz& matriz) {
+	this->matrizInicial = matriz;
+    
+    cantElementos = static_cast<unsigned>(matriz.cols());
+    cantVectores = static_cast<int>(matriz.rows());
+    
+
+    
+    /*for (int r = 0; r < cantVectores; r++) {
         agregarUnPunto(matrizInicial.row(r));
-    }
+    }*/
+    this->Inicializacion();
 }
 
 /*void kMeans::agregarPuntos(const TipoMatriz& puntos) {
@@ -44,18 +65,26 @@ void kMeans::agregarPuntos(const TipoMatriz& puntos) {
 
 void kMeans::agregarUnPunto(const TipoVectorFila& unPunto) {
 // Si es el primer elemento, se inicializa centroides
+Eigen::IOFormat FORMATOSALIDA;
+
     if (cantPuntos == 0) {
-        this->centroides = TipoMatriz(cantClusters, cantElementos);
-        centroides.setRandom();
-        std::cout<< "centroides incialesss: " << std::endl;
-        std::cout<<centroides<< std::endl;
+        int unaPosicion;
+        srand (time(NULL));
         
-        //this->inicializarCentroidesRand(this->centroides);
+        this->centroides = TipoMatriz(cantClusters, cantElementos);
+
+        for (int i = 0; i<cantClusters; i++){
+            unaPosicion = rand() % cantVectores + 1;
+            centroides.row(i) = matrizInicial.row(unaPosicion);
+            }
+        std::cout<< "centroides incialesss: " << std::endl;
+        std::cout<<centroides.format(FormatoImpresion)<< std::endl;
     }
     // Si hay menos elementos que clusters, asignar un punto al primer
     // cluster vacio (supuestamente hace que corverja mas rapido que si es random)
     /*if (cantElementos < cantClusters) {
         centroides.row(cantPuntos) = unPunto;
+        //ESTO ESTA MAL
     }*/
     
     int masCerano = calcularPuntoMasCercano(unPunto);
@@ -65,23 +94,26 @@ void kMeans::agregarUnPunto(const TipoVectorFila& unPunto) {
     // re calcular promedio
     centroides.row(masCerano) += 
       (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];
+    std::cout<< "Primer vuelta: " << std::endl;
+    std::cout<<centroides.format(FormatoImpresion)<< std::endl;
 };
 
 
 int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
 // calcula la distancia desde un punto a cada promedio
 //
+Eigen::IOFormat FORMATOSALIDA;
 
 std::cout<< "/**************** CALCULANDO MAS CERCANO****************************/ " << std::endl;
-/*std::cout<< "centroides: " << std::endl;
-std::cout<<centroides<< std::endl;
+std::cout<< "centroides: " << std::endl;
+std::cout<<centroides.format(FormatoImpresion)<< std::endl;
 std::cout<< "punto: " << std::endl;
-std::cout<<unPunto<< std::endl;*/
+std::cout<<unPunto.format(FormatoImpresion)<< std::endl;
 
     TipoVectorColumna normas((centroides - unPunto.replicate(cantClusters, 1)).rowwise().norm());
     //encontrar el indice del centroide mas cercano
-    /*std::cout<< "Distancias: " << std::endl;
-    std::cout<< normas << std::endl;*/
+    std::cout<< "Distancias: " << std::endl;
+    std::cout<< normas.format(FormatoImpresion) << std::endl;
 
     
 
@@ -128,7 +160,7 @@ void kMeans::limpiarNuevosCentroides(){
 * output to file.
 */
 void kMeans::runner(){
-
+Eigen::IOFormat FORMATOSALIDA;
     bool bandera = false;
     unsigned iter = 0;
 for (int ju=0; ju<25; ju++){
@@ -153,7 +185,7 @@ for (int ju=0; ju<25; ju++){
                 std::cout << "k= "<< k << " tiene: " <<cantElementosClusters[k] << std::endl;
             
             std::cout << "\n nuevos centroides: " << std::endl;
-            std::cout << nuevosCentroides << std::endl;
+            std::cout << nuevosCentroides.format(FormatoImpresion) << std::endl;
             std::cout << "\n" << std::endl;*/
             
             int alCluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
@@ -193,7 +225,7 @@ for (int ju=0; ju<25; ju++){
         }
     
     std::cout<< "Nuevos centroides: " << std::endl;
-    std::cout << nuevosCentroides << std::endl;
+    std::cout << nuevosCentroides.format(FormatoImpresion) << std::endl;
     std::cout << "iteraciones: "<< iter <<std::endl;
     std::cout << std::endl;
     centroides = nuevosCentroides;
@@ -202,40 +234,40 @@ for (int ju=0; ju<25; ju++){
 
 
 void kMeans::runner2(){
+Eigen::IOFormat FORMATOSALIDA;
 
 bool bandera = false;
 unsigned iter = 0;
-//while (bandera == false) {
-for (int ju=0; ju<25; ju++){
+while (bandera == false) {
+//for (int ju=0; ju<25; ju++){
     iter++;
-//for (int iter=0; iter<200; iter++){
     bool result = true;
     this->limpiarNuevosCentroides();
     for (int i = 0; i < cantClusters; i++) {
-        cantElementosClusters[i] = 1; //resetear valores
+        cantElementosClusters[i] = 0; //resetear valores
     }
   
-    for (unsigned i = 0; i < cantVectores; i++) { //cantClusters
+    for (unsigned i = 0; i < cantVectores; i++) { 
         TipoVectorFila unPunto = matrizInicial.row(i);
         unsigned alCluster = calcularPuntoMasCercano(unPunto); //gets closest centroid for ALL distances
 
         //nuevosCentroides.row(alCluster) += (unPunto - nuevosCentroides.row(alCluster));//////posible mejora
-       for (int j = 0; j < cantVectores; j++) {
+       for (int j = 0; j < cantVectores; j++){
            TipoVectorFila otroPunto = matrizInicial.row(j);
-           if (alCluster == calcularPuntoMasCercano(otroPunto));
-                nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster)); //sums all datum belonging to certain centroid
+           if (alCluster == calcularPuntoMasCercano(otroPunto)){
+                nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster));
+                //; //sums all datum belonging to certain centroid
                 //newCentroids[count][j] += classifiedData[i][j]; //sums all datum belonging to certain centroid
             }
-        
+        }
         cantElementosClusters[alCluster]++;
     }
     
-    /*centroides.row(masCerano) += 
-      (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];*/
+    //centroides.row(masCerano) += (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];
       
     //finds the average between all datum belonging to certain centroid
-    for (unsigned i = 0; i < cantClusters; i++) 
-            nuevosCentroides.row(i) = nuevosCentroides.row(i) / cantElementosClusters[i];
+    for (unsigned i = 0; i < cantClusters; i++)       
+        nuevosCentroides.row(i) = nuevosCentroides.row(i) / cantElementosClusters[i];
 
 
     //banderas if newCentroid values are same as Centroid
@@ -256,12 +288,10 @@ for (int ju=0; ju<25; ju++){
     }
     
     std::cout<< "Nuevos centroides: " << std::endl;
-    std::cout << nuevosCentroides << std::endl;
+    std::cout << nuevosCentroides.format(FormatoImpresion) << std::endl;
     std::cout << "iteraciones: "<< iter <<std::endl;
     std::cout << std::endl;
     centroides = nuevosCentroides;
-    
-    
-    //getClassification(classifiedData, centroids);
-    }
+   }
 }
+
