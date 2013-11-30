@@ -92,31 +92,36 @@ this->Inicializacion();
 bool bandera = false;
 unsigned iter = 0;
 while (bandera == false) {
-//for (int iterac=0; iterac<150; iterac++){
     iter++;
     bool result = true;
+
     this->limpiarNuevosCentroides();
 
     for (int i = 0; i < cantClusters; i++) {
         cantElementosClusters[i] = 0; //resetear valores
     }
   
-    for (unsigned i = 0; i < cantVectores; i++) { 
+    for (unsigned i = 0; i < cantVectores; i++){
         TipoVectorFila unPunto = matrizInicial.row(i);
         unsigned alCluster = calcularPuntoMasCercano(unPunto);
 
-       for (int j = 0; j < cantVectores; j++){
+        for (int j = 0; j < cantVectores; j++){
            TipoVectorFila otroPunto = matrizInicial.row(j);
+           //Calcula las distancias de todos los puntos (nuevamente)
+           //Para sumar los puntos que correspondan
            if (alCluster == calcularPuntoMasCercano(otroPunto)){
-               //Suma las distancias de todos los vectores que pertenezcan a ese cluster
-                nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster));
+                //Suma las distancias de todos los vectores que pertenezcan a ese cluster
+                //Este metodo es k-medians
+                ////nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster));
+                
+                //Suma los valores de todos los vectores que pertenezcan a ese cluster
+                //Este metodo es k-means
+                nuevosCentroides.row(alCluster) += (otroPunto);
             }
         }
         cantElementosClusters[alCluster]++;
     }
-    
-    //centroides.row(masCerano) += (unPunto - centroides.row(masCerano))/ cantElementosClusters[masCerano];
-      
+
     //Calcula el promedio de todas las distancias
     //Aca falla cuando divide por 0, se anula un centroide
     for (unsigned i = 0; i < cantClusters; i++)       

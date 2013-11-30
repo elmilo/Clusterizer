@@ -27,25 +27,25 @@ int main(int argc, char **argv){
             miDiccionario->agregarTermino(tokenizer.siguienteTermino(), docID);
         }
     }
-    
-    
+
+
     //inicializa vector space model
     VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 
     //genera toda la coleccion de vectores de pesos
     vecSpaceModel.procesarDocumentos();
 
-
-    
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
     kMeans clusterizando(matrizVecSpace,3);
-    
-    for (int iteraciones=0; iteraciones<15; iteraciones++){
+
+
+    for (int iteracion=0; iteracion<15; iteracion++){
     cout << "*********************************************************** " << endl;
-    cout << "Iteracion : " << iteraciones << endl;
-    
+    cout << "Iteracion : " << iteracion << endl;
+
     clusterizando.runner();
-    
+
+
       for (unsigned r = 0; r < cantidadIDs; r++){
         std::cout << "docID: " << r << " es:  " 
                             << archivosCargados.popDocumento(r) << std::endl;
@@ -54,14 +54,12 @@ int main(int argc, char **argv){
         std::cout << std::endl;
         }
 
-
     cout << "\n Puntos clusters: " << endl;
     clusterizando.imprimirPuntosClusters();
     cout << "***********************------------------************************* \n\n" << endl;
     }
 
-
-delete miDiccionario;
+    delete miDiccionario;
 
 return 0;
 }
