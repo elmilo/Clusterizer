@@ -8,12 +8,13 @@
 #include <eigen3/Eigen/Core>
 
 #include <iostream>
+#include <vector>
 #include "TiposGlobales.h"
 
 int main(int argc, char **argv){
     
-    //string directorio="otrostextos/textosingles";
-    string directorio="textos";
+    string directorio="otrostextos/textosingles";
+    //string directorio="textos";
     //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
@@ -35,18 +36,23 @@ int main(int argc, char **argv){
 
     //genera toda la coleccion de vectores de pesos
     vecSpaceModel.procesarDocumentos();
-
+    
+    int cantClusters = 8;
+    
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
-    kMeans clusterizando(matrizVecSpace,3);
-
-
-    for (int iteracion=0; iteracion<10000; iteracion++){
-    //cout << "*********************************************************** " << endl;
-    cout << "\nIteracion : " << iteracion << endl;
+    kMeans clusterizando(matrizVecSpace, cantClusters);
 
     clusterizando.runner2();
 
-
+    for (int cluster=0; cluster<cantClusters; cluster++){
+        std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
+        std::cout << "Grupo: " << cluster+1 << " ("<< documentos.size() << " elementos)"<< std::endl;
+        for (unsigned r = 0; r < documentos.size() ; r++){
+            std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
+            }
+        std::cout << std::endl;
+        }
+      
       /*for (unsigned r = 0; r < cantidadIDs; r++){
         std::cout << "docID: " << r << " es:  " 
                             << archivosCargados.popDocumento(r) << std::endl;
@@ -55,10 +61,9 @@ int main(int argc, char **argv){
         std::cout << std::endl;
         }*/
 
-    //cout << "\n Puntos clusters: " << endl;
     //clusterizando.imprimirPuntosClusters();
     //cout << "***********************------------------************************* \n\n" << endl;
-    }
+
 
     delete miDiccionario;
 

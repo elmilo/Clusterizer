@@ -58,6 +58,8 @@ public:
     // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
     
+    std::vector<int> mostrarUnDato(int i) const;
+        
     void runner2();
 };
 

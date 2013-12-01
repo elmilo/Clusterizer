@@ -132,7 +132,7 @@ void kMeans::runner2() {
                 bandera = false;
         }
     }
-   this->mostrarDatos();
+   //this->mostrarDatos();
 }
 
 /*Esto es del paper "A Modified k-means Algorithm to Avoid Empty Clusters"
@@ -164,6 +164,10 @@ void kMeans::actualizarCentroides() {
     }
     //Creo que no es necesario hacerlo de nuevo
     //this->Normalizar(this->centroides,cantClusters);
+}
+
+std::vector<int> kMeans::mostrarUnDato(int i) const{
+    return clusters[i];
 }
 
 

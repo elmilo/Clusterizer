@@ -38,6 +38,10 @@ bool Tokenizer::setearStopWords(){
         return false;
     string linea;
     while(ifile>>linea){
+        //Dejo solo lo que no es signo de puntuacion
+        //Supongo que ya vienen en minusculas
+        linea.erase(std::remove_if(linea.begin(), linea.end(),
+                    (int(*)(int))std::ispunct), linea.end() );
         StopWords.insert(linea);
     }
     return true;
