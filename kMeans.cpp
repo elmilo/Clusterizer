@@ -116,81 +116,6 @@ void kMeans::LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas){
 }
 
 
-void kMeans::runner(){
-
-this->Inicializacion();
-
-bool bandera = false;
-unsigned iter = 0;
-//for (int kj= 0; kj <10; kj++){
-while (bandera == false) {
-    iter++;
-    bool result = true;
-    
-    this->LimpiarMatriz(nuevosCentroides, cantClusters, cantElementos);
-
-    for (int i = 0; i < cantClusters; i++) {
-        cantElementosClusters[i] = 0; //resetear valores
-    }
-  
-    for (int i = 0; i < cantVectores; i++){
-        TipoVectorFila unPunto = matrizInicial.row(i);
-        int alCluster = calcularPuntoMasCercano(unPunto);
-
-        for (int j = 0; j < cantVectores; j++){
-           TipoVectorFila otroPunto = matrizInicial.row(j);
-           //Calcula las distancias de todos los puntos (nuevamente)
-           //Para sumar los puntos que correspondan
-           if (alCluster == calcularPuntoMasCercano(otroPunto)){
-                //Suma las distancias de todos los vectores que pertenezcan a ese cluster
-                //Este metodo es k-medians
-                ////nuevosCentroides.row(alCluster) += (otroPunto - nuevosCentroides.row(alCluster));
-                
-                //Suma los valores de todos los vectores que pertenezcan a ese cluster
-                //Este metodo es k-means
-                nuevosCentroides.row(alCluster) += (otroPunto);
-            }
-        }
-        cantElementosClusters[alCluster]++;
-    }
-
-    //Calcula el promedio de todas las distancias
-    //Aca falla cuando divide por 0, se anula un centroide
-    for (int i = 0; i < cantClusters; i++)       
-        nuevosCentroides.row(i) = nuevosCentroides.row(i) / cantElementosClusters[i];
-
-
-    //banderas marca si los valores nuevos y viejos de centroides son iguales
-    //Por lo tanto no se necesitan mas iteraciones
-    for (int i = 0; i < cantClusters; i++) {
-        for (int j = 0; j < cantElementos; j++) {
-            if(result == true) {
-                if( abs(nuevosCentroides(i,j) - centroides (i,j)) < TOLERANCIA){
-                    bandera = true;
-                    result = true;
-                } else {
-                    bandera = false;
-                    result = false;
-                }
-            }
-        }
-    }
-    
-    /*std::cout<< "Nuevos centroides: " << std::endl;
-    std::cout << nuevosCentroides.format(FormatoImpresion) << std::endl;
-    
-    std::cout << std::endl;*/
-    centroides = nuevosCentroides;
-   }
-   //std::cout << "adentro del kmeans: "<< iter << " veces" <<std::endl;
-}
-
-
-    // store cluster points
-    //std::vector< std::vector<int> > clusters;
-    //k= cant de clusterss
-    //clusters.resize(k);
-    
 void kMeans::runner2() {
     
     this->Inicializacion();
@@ -226,7 +151,6 @@ void kMeans::runner2() {
         if (abs(suma) < TOLERANCIA) //Condicion de corte
             bandera = false;
     }
-   //std::cout << "adentro del kmeans: "<< step << " veces" <<std::endl;
    this->mostrarDatos();
 }
 
@@ -241,22 +165,22 @@ void kMeans::runner2() {
 /*suma += matrizInicial(clusters[i][j], d);
     this->centroides(i,d) = suma / (TipoGuardado)clusters[i].size();*/
 void kMeans::actualizarCentroides() {
-    TipoGuardado suma = 0;
     for (int i = 0; i < cantClusters; i++) {
         TipoVectorFila sumador;
         sumador.resize(cantElementos);
         sumador.setZero();
         /* Paper:
         * Efficient Online Spherical K-means Clustering (Shi Zhong)
+        * Se suman los centroides y se divide por su norma
+        * Parece que queda normalizado (y no vale la pena normalizar)
         * */
         for (unsigned j = 0; j < clusters[i].size(); j++){
-            sumador += matrizInicial.row(clusters[i][j]);
+            sumador += centroides.row(i); 
             }
-        TipoGuardado norma = sumador.norm();
-        this->centroides.row(i) = sumador /norma;
+        this->centroides.row(i) = sumador / sumador.norm();
     }
     //Creo que no es necesario hacerlo de nuevo, pero da mejor en los resultados hacerlo
-    this->Normalizar(this->centroides,cantClusters);
+    //this->Normalizar(this->centroides,cantClusters);
 }
 
 
