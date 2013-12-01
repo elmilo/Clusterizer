@@ -3,30 +3,29 @@
 
 #include "Diccionario.h"
 #include <iostream>
-#include <fstream>
 #include <stdlib.h>
 #include <string>
 #include <vector>
 
-#include <eigen3/Eigen/Dense>
 #include <math.h>
 
-using namespace std;
-using namespace Eigen;
+#include "TiposGlobales.h"
 
-typedef Matrix<float, Dynamic, Dynamic> TipoMatriz;
+using namespace std;
+//using namespace Eigen;
 
 class VectorSpaceModel {
-	
-	
+		
 private:
+	
 	typedef struct Nodo {
 		string token;
-		float idf;
-		};
+		TipoGuardado idf;
+		} algoparacompletar;
 
 	//Guarda las palabras nuevamente... pensar si no conviene usar el diccionario en vez
 	vector<Nodo> palabras;
+	vector<Nodo> palabrasDeDisco;
 
 	//Diccionario para encontrar las palabras. HAY QUE SACAR ESTA POROG
 	Diccionario* miDiccionario;
@@ -36,18 +35,34 @@ private:
 	//Guarda la cantidad de documentos para la matriz
 	unsigned cantDocs;
 	unsigned cantTerminos;
+
+	
 	void llenarPalabras();
+
 	void llenarMatrizConTFIDF();
 	int bbinaria(const std::string unaPalabra);
 	void limpiarMatriz();
 	
 public:
-	void guardarMatriz();
+	VectorSpaceModel();
+	
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
-	vector<float> getDocumento(int docID);
+	void guardarDiccionario();
+	
+	void cargarDiccionario();
+	
+	
+	//Entrada/Salida archivo:
+	/*void matrizHaciaArchivo();
+	TipoMatriz matrizDesdeArchivo();
+	
+	vector<TipoGuardado> getDocumento(int docID);*/
+
 	//TEMPORAL:
 	void mostrarMatriz();
+    	
+	TipoMatriz getMatriz() const;
 };
 
 #endif /* VECTORSPACEMODEL_H_ */

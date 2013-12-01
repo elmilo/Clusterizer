@@ -3,15 +3,17 @@
 #include "Loader.h"
 #include "FrecuenciasPorDocumento.h"
 #include "VectorSpaceModel.h"
+#include "kMeans.h"
+
 #include <eigen3/Eigen/Core>
 
 #include <iostream>
-
+#include "TiposGlobales.h"
 
 int main(int argc, char **argv){
     
-    string directorio="otrostextos/textosingles";
-    //string directorio="textos";
+    //string directorio="otrostextos/textosingles";
+    string directorio="textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
@@ -19,45 +21,52 @@ int main(int argc, char **argv){
     Diccionario *miDiccionario = new Diccionario;
     
 
-    for (unsigned i = 0; i<cantidadIDs; i++){
-        Tokenizer tokenizer(archivosCargados.popDocumento(i));
+    for (unsigned docID = 0; docID<cantidadIDs; docID++){
+        Tokenizer tokenizer(archivosCargados.popDocumento(docID));
         while (tokenizer.tengaTerminos()){
-            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), i);
+            miDiccionario->agregarTermino(tokenizer.siguienteTermino(), docID);
         }
     }
-    
-    for (unsigned i = 0; i<cantidadIDs; i++)
-		std::cout << "docID: " << i << " es:  " << archivosCargados.popDocumento(i) << std::endl;    
-    
-    
-    //miDiccionario->mostrar();
-     
-//inicializa vector space model
-VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
-//genera toda la coleccion de vectores de pesos
-vecSpaceModel.procesarDocumentos();
-// muetra todos los vectores, cada vector es un doc   
-vecSpaceModel.mostrarMatriz();
 
-/*for (std::vector<DocumentVector*>::iterator it = matriz.begin();
-			it != matriz.end(); ++it) {
-		(*it)->mostrarVector();
-		cout << endl;
-	}*/
 	
-cout<<endl;
-//vecSpaceModel.guardarMatriz();
+
+    //inicializa vector space model
+    VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
+
+    //genera toda la coleccion de vectores de pesos
+    vecSpaceModel.procesarDocumentos();
+    
+    vecSpaceModel.guardarDiccionario();
+	
+	vecSpaceModel.cargarDiccionario();
+
+	
+	
+    TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
+    kMeans clusterizando(matrizVecSpace,3);
 
 
-// recuperamos vector 2 del DISCO
-cout<<"doc 2 del disco:";
-vector<float> vec;
-vec= vecSpaceModel.getDocumento(2);
+    for (int iteracion=0; iteracion<0; iteracion++){
+    cout << "*********************************************************** " << endl;
+    cout << "Iteracion : " << iteracion << endl;
 
-for (std::vector<float>::iterator it = vec.begin(); it != vec.end(); ++it) 
-		cout<<(*it)<<" ";
+    clusterizando.runner();
 
-//delete miDiccionario;
+
+      for (unsigned r = 0; r < cantidadIDs; r++){
+        std::cout << "docID: " << r << " es:  " 
+                            << archivosCargados.popDocumento(r) << std::endl;
+        std::cout << "Pertenece al cluster: " 
+                << clusterizando.calcularPuntoMasCercano (matrizVecSpace.row(r)) << std::endl;
+        std::cout << std::endl;
+        }
+
+    cout << "\n Puntos clusters: " << endl;
+    clusterizando.imprimirPuntosClusters();
+    cout << "***********************------------------************************* \n\n" << endl;
+    }
+
+    delete miDiccionario;
 
 return 0;
 }
