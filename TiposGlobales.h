@@ -7,6 +7,10 @@
 
 typedef float TipoGuardado;
 
+/*typedef Eigen::SparseMatrix< TipoGuardado > TipoMatriz;
+typedef Eigen::SparseVector< TipoGuardado,RowMajor > TipoVectorFila;
+typedef Eigen::SparseVector< TipoGuardado > TipoVectorColumna;*/
+
 typedef Eigen::Matrix< TipoGuardado , Eigen::Dynamic , Eigen::Dynamic > TipoMatriz;
 typedef Eigen::Matrix< TipoGuardado , 1, Eigen::Dynamic > TipoVectorFila;
 typedef Eigen::Matrix< TipoGuardado , Eigen::Dynamic, 1 > TipoVectorColumna;

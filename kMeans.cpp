@@ -4,10 +4,8 @@ kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
         TOLERANCIA = 1e-30;
         this->matrizInicial = matriz;
-        
         cantElementos = static_cast<unsigned>(matriz.cols());
         cantVectores = static_cast<int>(matriz.rows());
-        
         clusters.resize(cantClusters);
         //Normalizacion de la matriz (variante)
         this->Normalizar(this->matrizInicial, cantVectores);
@@ -18,11 +16,9 @@ kMeans::kMeans() {};
 kMeans::~kMeans() {};
 
 void kMeans::Randomize(TipoMatriz& matrizCentroides){
-    //centroides.setRandom();
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, cantVectores-1);
-    
     for (int i = 0; i<cantClusters; i++){
         int unaPosicion = dis(gen);
         centroides.row(i) = matrizInicial.row(unaPosicion);
@@ -116,19 +112,25 @@ void kMeans::runner2() {
             alCluster = calcularPuntoMasCercano(unPunto);
             clusters[alCluster].push_back(i);
             }
-
-        nuevosCentroides = centroides;
         
-        this->actualizarCentroides();
-
-        suma = 0;
-        for (int i = 0; i < cantClusters; i++) {
-            for (int j = 0; j < cantElementos; j++) {
-                suma += nuevosCentroides(i,j) - centroides(i,j);
+        //Estrategia para clusters vacios: reiniciar todos centroides con vectores random
+        bool clusterVacios = false;
+        for (int i = 0; i < cantVectores; i++)
+            if (clusters[i].size()==0){
+                this->Randomize(this->centroides);
+                clusterVacios = true;
             }
+        
+        if (!clusterVacios){
+            nuevosCentroides = centroides;
+            this->actualizarCentroides();
+            suma = 0;
+            for (int i = 0; i < cantClusters; i++)
+                for (int j = 0; j < cantElementos; j++)
+                    suma += nuevosCentroides(i,j) - centroides(i,j);
+            if (abs(suma) < TOLERANCIA) //Condicion de corte
+                bandera = false;
         }
-        if (abs(suma) < TOLERANCIA) //Condicion de corte
-            bandera = false;
     }
    this->mostrarDatos();
 }
@@ -154,11 +156,13 @@ void kMeans::actualizarCentroides() {
         * Parece que queda normalizado (y no vale la pena normalizar)
         * */
         for (unsigned j = 0; j < clusters[i].size(); j++){
-            sumador += centroides.row(i); 
+            sumador += centroides.row(i); //<-paper "a modified..."
+            //sumador += matrizInicial.row(clusters[i][j]);
             }
         this->centroides.row(i) = sumador / sumador.norm();
+        //this->centroides.row(i) = sumador / (clusters[i].size());
     }
-    //Creo que no es necesario hacerlo de nuevo, pero da mejor en los resultados hacerlo
+    //Creo que no es necesario hacerlo de nuevo
     //this->Normalizar(this->centroides,cantClusters);
 }
 
