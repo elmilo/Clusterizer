@@ -1,16 +1,7 @@
 #include "kMeans.h"
 
-
-/**
-* Matrix< tipo que guarda, cant filas, cant cols >
-* 
-* */
-
-
 kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
-    cantClusters(n_clusters),
-    cantElementosClusters(n_clusters, 0),
-    cantPuntos(0){
+    cantClusters(n_clusters){
         TOLERANCIA = 1e-30;
         this->matrizInicial = matriz;
         
@@ -74,7 +65,6 @@ int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
     for (int i=0; i<cantClusters; i++){
         TipoVectorFila unCentroide = this->centroides.row(i);
         normas(i) = CalcularSimilaridad(unPunto, unCentroide);
-        //normas(i) = Jaccard(unPunto, unCentroide);
         }
     //le doy un valor imposible para el coseno
     TipoGuardado maxValue = -2.0; 
@@ -86,17 +76,6 @@ int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
         }
     }
     return masCercano;
-}
-
-//Jaccard: parecido al coseno
-TipoGuardado kMeans::Jaccard(TipoVectorFila vecA, TipoVectorFila vecB) const{
-    TipoGuardado producto = vecA.dot(vecB);
-    
-    TipoGuardado normaA = vecA.norm();
-    TipoGuardado normaB = vecB.norm();
-    
-    TipoGuardado resultado = producto / (normaA * normaB - producto);
-    return resultado;
 }
 
 //Coseno
