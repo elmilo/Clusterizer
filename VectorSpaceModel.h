@@ -45,15 +45,6 @@ public:
 	VectorSpaceModel(Diccionario *miDiccionario, unsigned cantDocuments);
 	void procesarDocumentos();
 	
-	//Entrada/Salida archivo:
-	/*void matrizHaciaArchivo();
-	TipoMatriz matrizDesdeArchivo();
-	
-	vector<TipoGuardado> getDocumento(int docID);*/
-
-	//TEMPORAL:
-	void mostrarMatriz();
-    	
 	TipoMatriz getMatriz() const;
 };
 

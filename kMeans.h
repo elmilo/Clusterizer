@@ -26,24 +26,25 @@ private:
     TipoMatriz matrizInicial; // guarda la matriz de datos
     TipoMatriz centroides; // cada fila es el centroide del cluster
     TipoMatriz nuevosCentroides; // idem
-    TipoMatriz dataOrdenada; // guarda a que cluster pertenece cada elemento clusterizable
     
     std::vector<int> cantElementosClusters; // cantidad de elementos en cada cluster
-    std::vector<int> clasificados; // [elementos clusterizables] -> el cluster a donde pertenecen
     int cantPuntos; // total de puntos agregados
-
+    
+    std::vector< std::vector<int> > clusters; //Para guardar los elementos clusterizados
+    
+    TipoGuardado Jaccard(TipoVectorFila vecA, TipoVectorFila vecB) const;
+    TipoGuardado CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const;
 
     // not allowed
     kMeans();
     
-    void limpiarNuevosCentroides();
+    void LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas);
     
     void Inicializacion();
     
-    void Clasificar();//No funciona
-    
     void Randomize(TipoMatriz& matrizCentroides);
 
+    void Normalizar(TipoMatriz& unaMatriz, int tamanio);
 public:
     
 
@@ -53,12 +54,14 @@ public:
   
     // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
-
-    TipoMatriz getCentroides() const;
-    
-    void imprimirPuntosClusters();
     
     void runner();
+    
+    void runner2();
+    
+    void mostrarDatos();
+    
+    void actualizarCentroides();
 };
 
 #endif // KMEANS_H

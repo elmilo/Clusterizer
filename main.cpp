@@ -14,6 +14,7 @@ int main(int argc, char **argv){
     
     //string directorio="otrostextos/textosingles";
     string directorio="textos";
+    //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
@@ -39,24 +40,24 @@ int main(int argc, char **argv){
     kMeans clusterizando(matrizVecSpace,3);
 
 
-    for (int iteracion=0; iteracion<15; iteracion++){
-    cout << "*********************************************************** " << endl;
-    cout << "Iteracion : " << iteracion << endl;
+    for (int iteracion=0; iteracion<10000; iteracion++){
+    //cout << "*********************************************************** " << endl;
+    cout << "\nIteracion : " << iteracion << endl;
 
-    clusterizando.runner();
+    clusterizando.runner2();
 
 
-      for (unsigned r = 0; r < cantidadIDs; r++){
+      /*for (unsigned r = 0; r < cantidadIDs; r++){
         std::cout << "docID: " << r << " es:  " 
                             << archivosCargados.popDocumento(r) << std::endl;
         std::cout << "Pertenece al cluster: " 
                 << clusterizando.calcularPuntoMasCercano (matrizVecSpace.row(r)) << std::endl;
         std::cout << std::endl;
-        }
+        }*/
 
-    cout << "\n Puntos clusters: " << endl;
-    clusterizando.imprimirPuntosClusters();
-    cout << "***********************------------------************************* \n\n" << endl;
+    //cout << "\n Puntos clusters: " << endl;
+    //clusterizando.imprimirPuntosClusters();
+    //cout << "***********************------------------************************* \n\n" << endl;
     }
 
     delete miDiccionario;
