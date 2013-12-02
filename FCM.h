@@ -18,7 +18,6 @@
 class FCM {
 private:
     TipoGuardado TOLERANCIA;
-    TipoGuardado SDV_PARAM;//Para guardar cuantas desviaciones estandar se quieren
     //TipoGuardado fuzzyness; //"m" en los papers, mayor a 1
     TipoGuardado MSHIP_PARAM;
     

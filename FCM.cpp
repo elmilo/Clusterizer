@@ -3,7 +3,6 @@
 FCM::FCM(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
         TOLERANCIA = 1e-15;
-        SDV_PARAM = 0.4;
         MSHIP_PARAM = 0.58;
         this->matrizInicial = matriz;
         
@@ -20,6 +19,18 @@ FCM::FCM(const TipoMatriz& matriz, int n_clusters):
         this->Normalizar(this->matrizInicial, cantVectores);
     };
 
+kMeans::kMeans(const TipoMatriz& matriz){
+        TOLERANCIA = 1e-10;
+        MSHIP_PARAM = 0.58;
+        this->matrizInicial = matriz;
+        
+        cantElementos = static_cast<unsigned>(matriz.cols());
+        cantVectores = static_cast<int>(matriz.rows());
+        
+        //Normalizacion de la matriz (variante)
+        this->Normalizar(this->matrizInicial, cantVectores);
+    };
+    
 FCM::FCM() {};
 
 FCM::~FCM() {};
@@ -172,3 +183,18 @@ void FCM::calcularClusters(){
         }
 }
 
+int FCM::proponerK(int maximosClusters){
+    int iter = floor(pow(cantVectores/2,0.5));
+    cantClusters = iter;
+    
+    this->LimpiarMatriz(this->gradoDeMembresia, cantVectores, cantClusters);
+    gradoDeMembresia.setRandom();
+    clusters.resize(cantClusters);
+    
+    for (int j = 0; j < cantClusters; j++)
+        clusters[j].clear();
+        
+    this->runner();
+
+    return iter;
+}
