@@ -4,6 +4,7 @@
 #include "FrecuenciasPorDocumento.h"
 #include "VectorSpaceModel.h"
 #include "kMeans.h"
+#include "FCM.h"
 
 #include <eigen3/Eigen/Core>
 
@@ -12,11 +13,11 @@
 #include "TiposGlobales.h"
 
 int main(int argc, char **argv){
-    int cantClusters = 6;
+    int cantClusters = 10;
     
     //string directorio="otrostextos/textosingles";
-    string directorio="textos";
-    //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
+    //string directorio="textos";
+    string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
@@ -37,7 +38,21 @@ int main(int argc, char **argv){
     //genera toda la coleccion de vectores de pesos
     vecSpaceModel.procesarDocumentos();
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
-    kMeans clusterizando(matrizVecSpace, cantClusters);
+    
+    FCM clusterizando(matrizVecSpace, cantClusters);
+
+    clusterizando.runner();
+
+    for (int cluster=0; cluster<cantClusters; cluster++){
+        std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
+        std::cout << "Grupo: " << cluster+1 << std::endl;
+        std::cout << "("<< documentos.size() << " elementos)"<< std::endl;
+        for (unsigned r = 0; r < documentos.size() ; r++){
+            std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
+            }
+        std::cout << std::endl;
+    }
+    /*kMeans clusterizando(matrizVecSpace, cantClusters);
 
     clusterizando.runner2();
 
@@ -49,7 +64,7 @@ int main(int argc, char **argv){
             std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
             }
         std::cout << std::endl;
-        }
+        }*/
 
     delete miDiccionario;
 

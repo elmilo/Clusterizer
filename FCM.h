@@ -18,6 +18,7 @@
 class FCM {
 private:
     TipoGuardado TOLERANCIA;
+    TipoGuardado SDV_PARAM;//Para guardar cuantas desviaciones estandar se quieren
     //TipoGuardado fuzzyness; //"m" en los papers, mayor a 1
     
     int cantElementos; //Dimension (cantidad de palabras por ejemplo)
@@ -40,9 +41,6 @@ private:
     
     std::vector< std::vector<int> > clusters; //Para guardar los elementos clusterizados, y su cantidad
     
-    //Distancia Coseno
-    TipoGuardado CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const;
-
     //Inicializar con ceros una matriz
     void LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas);
     
@@ -58,14 +56,13 @@ private:
     FCM(); //No se puede
     
     void Inicializacion();
+    
+    void calcularClusters();
 public:
-
+    
     FCM(const TipoMatriz& matriz, int n_clusters);
   
     ~FCM();
-  
-    // calcular cual centroide es el mas cercano a un punto
-    int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
     
     std::vector<int> mostrarUnDato(int i) const;
         

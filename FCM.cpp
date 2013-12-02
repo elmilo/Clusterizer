@@ -2,9 +2,8 @@
 
 FCM::FCM(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
-        TOLERANCIA = 1e-10;
-        fuzzyness = 1.5;
-        
+        TOLERANCIA = 1e-15;
+        SDV_PARAM = 0.4;
         this->matrizInicial = matriz;
         
         cantElementos = static_cast<unsigned>(matriz.cols());
@@ -41,92 +40,10 @@ void FCM::Inicializacion(){
 }
 
 
-int FCM::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
-    TipoVectorColumna normas;
-    normas.resize(cantClusters);
-
-    for (int i=0; i<cantClusters; i++){
-        TipoVectorFila unCentroide = this->centroides.row(i);
-        normas(i) = CalcularSimilaridad(unPunto, unCentroide);
-        }
-    //le doy un valor imposible para el coseno
-    TipoGuardado maxValue = -2.0; 
-    int masCercano = -1;
-    for (int m = 0; m < cantClusters; m++) {
-        if (normas(m) > maxValue) {
-            maxValue = normas(m);
-            masCercano = m;
-        }
-    }
-    return masCercano;
-}
-
-//Coseno
-TipoGuardado FCM::CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const{
-    TipoGuardado producto = vecA.dot(vecB);
-    
-    TipoGuardado normaA = vecA.norm();
-    TipoGuardado normaB = vecB.norm();
-    
-    TipoGuardado resultado = producto / (normaA * normaB);
-    return resultado;
-}
-
-
 void FCM::LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas){
     unaMatriz = TipoMatriz::Zero(filas, columnas);
 }
 
-
-void FCM::runner2() {
-    
-    this->Inicializacion();
-    this->LimpiarMatriz(nuevosCentroides, cantClusters, cantElementos);
-    
-    bool bandera = true;
-    int alCluster = -1;
-    TipoGuardado suma = 0;
-    int step = 0;
-    
-    while (bandera) {
-        step++;
-        
-        for (int j = 0; j < cantClusters; j++)
-            clusters[j].clear();
-        
-        for (int i = 0; i < cantVectores; i++){
-            TipoVectorFila unPunto = matrizInicial.row(i);
-            alCluster = calcularPuntoMasCercano(unPunto);
-            clusters[alCluster].push_back(i);
-            }
-        
-        //Estrategia para clusters vacios: reiniciar todos centroides con vectores random
-        bool clusterVacios = false;
-        /*for (int i = 0; i < cantVectores; i++)
-            if (clusters[i].size()==0){
-                this->Randomize(this->centroides);
-                clusterVacios = true;
-            }*/
-        
-        if (!clusterVacios){
-            nuevosCentroides = centroides;
-            this->actualizarCentroides();
-            suma = 0;
-            for (int i = 0; i < cantClusters; i++)
-                for (int j = 0; j < cantElementos; j++)
-                    suma += nuevosCentroides(i,j) - centroides(i,j);
-            if (abs(suma) < TOLERANCIA) //Condicion de corte
-                bandera = false;
-        }
-    }
-}
-
-/*Esto es del paper "A Modified k-means Algorithm to Avoid Empty Clusters"
-* Suma uno mas para no dividir por cero, un genio
-* Ademas, suma los centroides en cada iteracion
-* */
-/*suma += matrizInicial(clusters[i][j], d) + centroides(i,d);
-    this->centroides(i,d) = suma / (clusters[i].size()+1);*/
 
 /*Esto es el algoritmo comun:*/    
 /*suma += matrizInicial(clusters[i][j], d);
@@ -186,7 +103,7 @@ void FCM::runner() {
                 }
         
         for (int i = 0; i < cantVectores; i++){
-            TipoGuardado suma = 0
+            TipoGuardado suma = 0;
             for (int j = 0; j < cantClusters; j++)
                 suma += temporal(i,j);
             gradoDeMembresia.row(i) = temporal.row(i)/suma;
@@ -194,10 +111,12 @@ void FCM::runner() {
             
         for (int i = 0; i < cantClusters; i++)
             for (int j = 0; j < cantVectores; j++){
-            TipoVectorFila unVector = gradoDeMembresia.row(i);
-            TipoGuardado norma22 = unVector.squaredNorm(); //Cuadrado de la norma
-            centroides.row(i) = norma22 * matrizInicial.row(j);
-            centroides.row(i) /= norma22;
+            //TipoVectorFila unVector = gradoDeMembresia.row(i); 
+            //TipoGuardado norma22 = unVector.squaredNorm(); //Cuadrado de la norma
+            //Esto esta mal, no cumple con la definicion
+            centroides.row(i) = matrizInicial.row(j);
+            //centroides.row(i) = norma22 * matrizInicial.row(j);
+            //centroides.row(i) /= norma22;
             }
 
         nuevosCentroides = centroides;
@@ -211,5 +130,48 @@ void FCM::runner() {
         if (abs(suma) < TOLERANCIA) //Condicion de corte
                 bandera = false;
     }
-    std::cout << gradoDeMembresia << std::endl;
+    
+    //Normalizar membresia
+    for (int i = 0; i< cantClusters; i++){
+        TipoVectorColumna vector = gradoDeMembresia.col(i);
+        vector.normalize();
+        gradoDeMembresia.col(i) = vector;
+        }
+    
+    //std::cout << gradoDeMembresia << std::endl;
+    this->calcularClusters();
 }
+
+
+void FCM::calcularClusters(){
+    for (int j = 0; j < cantClusters; j++)
+            clusters[j].clear();
+            
+    //Suma a los largo de las columnas:
+    TipoVectorFila promedios  = gradoDeMembresia.rowwise().sum() / gradoDeMembresia.cols();
+    //Inicializa con ceros:
+    TipoVectorFila desviaciones = TipoVectorFila::Zero(cantVectores);
+
+    for (int i = 0; i<cantVectores; i++){
+        for (int j = 0; j<cantClusters; j++) 
+            desviaciones(i) += pow( (gradoDeMembresia(i,j) - promedios(i)),2);
+     desviaciones(i) = pow((desviaciones(i)/cantClusters),0.5);
+    }
+
+    for (int i = 0; i<cantClusters; i++){
+        for (int j = 0; j<cantVectores; j++){
+            TipoGuardado grado = gradoDeMembresia(j,i);
+            TipoGuardado compneg,comppos;
+            compneg = promedios(j) - SDV_PARAM * desviaciones(j);
+            comppos = promedios(j) + SDV_PARAM * desviaciones(j);
+            if (compneg < grado && grado < comppos)
+                clusters[i].push_back(j);
+            }
+    }
+    /*std::cout << gradoDeMembresia << std::endl;
+    std::cout << "desviaciones" << std::endl;
+    std::cout << desviaciones << std::endl;
+    std::cout << "promedios" << std::endl;
+    std::cout << promedios << std::endl;*/
+}
+
