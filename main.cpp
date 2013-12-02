@@ -13,11 +13,11 @@
 #include "TiposGlobales.h"
 
 int main(int argc, char **argv){
-    int cantClusters = 3;
+    int cantClusters = 8;
     
-    //string directorio="otrostextos/textosingles";
-    string directorio="textos";
-    //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
+//    string directorio="otrostextos/textosingles";
+    //string directorio="textos";
+    string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
@@ -39,7 +39,7 @@ int main(int argc, char **argv){
     vecSpaceModel.procesarDocumentos();
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
     
-    FCM clusterizando(matrizVecSpace, cantClusters);
+    /*FCM clusterizando(matrizVecSpace, cantClusters);
 
     clusterizando.runner();
 
@@ -51,12 +51,14 @@ int main(int argc, char **argv){
             std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
             }
         std::cout << std::endl;
-    }
+    }*/
     
-    /*kMeans clusterizando(matrizVecSpace, cantClusters);
+    kMeans clusterizando(matrizVecSpace);
 
-    clusterizando.runner2();
-
+    //clusterizando.runner();
+    cantClusters = clusterizando.proponerK();
+    std::cout << "El k optimo: " <<  cantClusters << std::endl;
+    
     for (int cluster=0; cluster<cantClusters; cluster++){
         std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
         std::cout << "Grupo: " << cluster+1 << std::endl;
@@ -65,7 +67,7 @@ int main(int argc, char **argv){
             std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
             }
         std::cout << std::endl;
-        }*/
+        }
 
     delete miDiccionario;
 

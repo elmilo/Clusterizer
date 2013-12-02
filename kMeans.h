@@ -16,6 +16,7 @@
 
 class kMeans {
 private:
+
     TipoGuardado TOLERANCIA;
     
     int cantElementos; //Dimension (cantidad de palabras por ejemplo)
@@ -27,8 +28,15 @@ private:
     TipoMatriz centroides; // cada fila es el centroide del cluster
     TipoMatriz nuevosCentroides; // idem
     
-    std::vector< std::vector<int> > clusters; //Para guardar los elementos clusterizados, y su cantidad
+    TipoVectorClusters clusters; //Para guardar los elementos clusterizados, y su cantidad
     
+    /*typedef struct Registro {
+        int kpropuesto = 0;
+        int cantCeros = 0; //cant de clusters con cero elementos
+    TipoVectorClusters vector;} Registro;
+    
+    std::vector< Registro > propuestos; //elementos propuestos
+    */
     //Distancia Coseno
     TipoGuardado CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const;
 
@@ -47,9 +55,16 @@ private:
     kMeans(); //No se puede
     
     void Inicializacion();
+    
+    int calcularCantidadClustersVacios();
+    
+    int buscarKoptimo(int maximosClusters);
+    
 public:
 
     kMeans(const TipoMatriz& matriz, int n_clusters);
+    
+    kMeans(const TipoMatriz& matriz);
   
     ~kMeans();
   
@@ -57,8 +72,10 @@ public:
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
     
     std::vector<int> mostrarUnDato(int i) const;
+    
+    int proponerK(int maximosClusters = 32);
         
-    void runner2();
+    void runner();
 };
 
 #endif // KMEANS_H

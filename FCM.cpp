@@ -4,7 +4,7 @@ FCM::FCM(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
         TOLERANCIA = 1e-15;
         SDV_PARAM = 0.4;
-        MSHIP_PARAM = 0.85;
+        MSHIP_PARAM = 0.58;
         this->matrizInicial = matriz;
         
         cantElementos = static_cast<unsigned>(matriz.cols());
@@ -139,51 +139,12 @@ void FCM::runner() {
         }
     }
 
-    /*while (!bandera){
-        for (int i = 0; i < cantVectores; i++)
-            for (int j = 0; j < cantClusters; j++){
-                TipoVectorFila unVector;
-                unVector = matrizInicial.row(i) - centroides.row(j);
-                temporal(i,j) = exp(- (unVector.squaredNorm()));
-                }
-        
-        for (int i = 0; i < cantVectores; i++){
-            TipoGuardado suma = 0;
-            for (int j = 0; j < cantClusters; j++)
-                suma += temporal(i,j);
-            gradoDeMembresia.row(i) = temporal.row(i)/suma;
-            }
-            
-        for (int i = 0; i < cantClusters; i++)
-            for (int j = 0; j < cantVectores; j++){
-            //TipoVectorFila unVector = gradoDeMembresia.row(i); 
-            //TipoGuardado norma22 = unVector.squaredNorm(); //Cuadrado de la norma
-            //Esto esta mal, no cumple con la definicion
-            centroides.row(i) = matrizInicial.row(j);
-            //centroides.row(i) = norma22 * matrizInicial.row(j);
-            //centroides.row(i) /= norma22;
-            }
-
-        nuevosCentroides = centroides;
-        this->actualizarCentroides();
-
-        suma = 0;
-        for (int i = 0; i < cantClusters; i++)
-            for (int j = 0; j < cantElementos; j++)
-                suma += nuevosCentroides(i,j) - centroides(i,j);
-
-        if (abs(suma) < TOLERANCIA) //Condicion de corte
-                bandera = false;
-    }*/
-    
     //Normalizar membresia
     for (int i = 0; i< cantClusters; i++){
         TipoVectorColumna vector = gradoDeMembresia.col(i);
         vector.normalize();
         gradoDeMembresia.col(i) = vector;
         }
-    
-    //std::cout << gradoDeMembresia << std::endl;
     this->calcularClusters();
 }
 
@@ -195,46 +156,19 @@ TipoGuardado FCM::getMaximo(TipoVectorFila vector) const{
             maximo = vector(i);
             }
     }
-return maximo;
+    return maximo;
 }
 
 
 void FCM::calcularClusters(){
     for (int j = 0; j < cantClusters; j++)
             clusters[j].clear();
-    
+
     for (int i = 0; i<cantVectores; i++){
         TipoGuardado maximaSimilitud = getMaximo(gradoDeMembresia.row(i));
         for (int j = 0; j<cantClusters; j++)
             if (gradoDeMembresia(i,j) > MSHIP_PARAM * maximaSimilitud)
                 clusters[j].push_back(i);
         }
-    
-    //Suma a los largo de las columnas:
-    //TipoVectorFila promedios  = gradoDeMembresia.rowwise().sum() / gradoDeMembresia.cols();
-    //Inicializa con ceros:
-    //TipoVectorFila desviaciones = TipoVectorFila::Zero(cantVectores);
-
-    /*for (int i = 0; i<cantVectores; i++){
-        for (int j = 0; j<cantClusters; j++) 
-            desviaciones(i) += pow( (gradoDeMembresia(i,j) - promedios(i)),2);
-     desviaciones(i) = pow((desviaciones(i)/cantClusters),0.5);
-    }
-
-    for (int i = 0; i<cantClusters; i++){
-        for (int j = 0; j<cantVectores; j++){
-            TipoGuardado grado = gradoDeMembresia(j,i);
-            TipoGuardado compneg,comppos;
-            compneg = promedios(j) - SDV_PARAM * desviaciones(j);
-            comppos = promedios(j) + SDV_PARAM * desviaciones(j);
-            if (compneg < grado && grado < comppos)
-                clusters[i].push_back(j);
-            }
-    }*/
-    std::cout << gradoDeMembresia << std::endl;
-    /*std::cout << "desviaciones" << std::endl;
-    std::cout << desviaciones << std::endl;
-    std::cout << "promedios" << std::endl;
-    std::cout << promedios << std::endl;*/
 }
 

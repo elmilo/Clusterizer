@@ -11,6 +11,17 @@ kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
         this->Normalizar(this->matrizInicial, cantVectores);
     };
 
+kMeans::kMeans(const TipoMatriz& matriz){
+        TOLERANCIA = 1e-10;
+        this->matrizInicial = matriz;
+        
+        cantElementos = static_cast<unsigned>(matriz.cols());
+        cantVectores = static_cast<int>(matriz.rows());
+        
+        //Normalizacion de la matriz (variante)
+        this->Normalizar(this->matrizInicial, cantVectores);
+    };
+
 kMeans::kMeans() {};
 
 kMeans::~kMeans() {};
@@ -91,7 +102,7 @@ void kMeans::LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas){
 }
 
 
-void kMeans::runner2() {
+void kMeans::runner() {
     
     this->Inicializacion();
     this->LimpiarMatriz(nuevosCentroides, cantClusters, cantElementos);
@@ -181,3 +192,50 @@ void kMeans::Normalizar(TipoMatriz& unaMatriz, int tamanio){
         unaMatriz.row(i) = vector;
         }
 }
+
+
+int kMeans::proponerK(int maximosClusters){
+    //Registro registro;
+    //for (int iter=2; iter<=maximosClusters; iter++){
+        int iter = floor(pow(cantVectores/2,0.5));
+        cantClusters = iter;
+        clusters.resize(cantClusters);
+        for (int j = 0; j < cantClusters; j++)
+            clusters[j].clear();
+            
+        this->runner();
+
+        /*registro.kpropuesto = cantClusters;
+        registro.cantCeros = calcularCantidadClustersVacios();
+        registro.vector = this->clusters;
+        
+        propuestos.push_back(registro);*/
+      //  }
+        
+    return iter;//this->buscarKoptimo(maximosClusters);
+}
+
+
+/*int kMeans::calcularCantidadClustersVacios(){
+    int cantidad = 0;
+    for (int i =0; i<cantClusters; i++)
+        if (clusters[i].size() == 0)
+            cantidad++;
+    return cantidad;
+}*/
+
+
+//El K optimo es el que tiene menos clusters vacios
+/*int kMeans::buscarKoptimo(int maximosClusters){
+    int coordenada;
+    int clustersVaciosMin = std::numeric_limits<int>::max();
+    
+    for (int i=0; i<maximosClusters; i++)
+        if (propuestos[i].cantCeros < clustersVaciosMin){
+            coordenada = i;
+            clustersVaciosMin =propuestos[i].cantCeros;
+            }
+
+    this->clusters = propuestos[coordenada].vector;
+    return propuestos[coordenada].kpropuesto;
+}*/

@@ -3,6 +3,7 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
+#include <vector>
 
 
 typedef float TipoGuardado;
@@ -14,5 +15,7 @@ typedef Eigen::SparseVector< TipoGuardado > TipoVectorColumna;*/
 typedef Eigen::Matrix< TipoGuardado , Eigen::Dynamic , Eigen::Dynamic > TipoMatriz;
 typedef Eigen::Matrix< TipoGuardado , 1, Eigen::Dynamic > TipoVectorFila;
 typedef Eigen::Matrix< TipoGuardado , Eigen::Dynamic, 1 > TipoVectorColumna;
+
+typedef std::vector< std::vector<int> > TipoVectorClusters;
 
 #endif
