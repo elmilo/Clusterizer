@@ -13,11 +13,11 @@
 #include "TiposGlobales.h"
 
 int main(int argc, char **argv){
-    int cantClusters = 10;
+    int cantClusters = 3;
     
     //string directorio="otrostextos/textosingles";
-    //string directorio="textos";
-    string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
+    string directorio="textos";
+    //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
@@ -52,6 +52,7 @@ int main(int argc, char **argv){
             }
         std::cout << std::endl;
     }
+    
     /*kMeans clusterizando(matrizVecSpace, cantClusters);
 
     clusterizando.runner2();

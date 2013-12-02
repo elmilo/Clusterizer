@@ -20,6 +20,7 @@ private:
     TipoGuardado TOLERANCIA;
     TipoGuardado SDV_PARAM;//Para guardar cuantas desviaciones estandar se quieren
     //TipoGuardado fuzzyness; //"m" en los papers, mayor a 1
+    TipoGuardado MSHIP_PARAM;
     
     int cantElementos; //Dimension (cantidad de palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
@@ -58,6 +59,13 @@ private:
     void Inicializacion();
     
     void calcularClusters();
+    
+    void llenarMembresias();
+    
+    TipoGuardado CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const;
+    
+    TipoGuardado getMaximo(TipoVectorFila vector) const;
+    
 public:
     
     FCM(const TipoMatriz& matriz, int n_clusters);

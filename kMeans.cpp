@@ -155,7 +155,7 @@ void kMeans::actualizarCentroides() {
         * Parece que queda normalizado (y no vale la pena normalizar)
         * */
         for (unsigned j = 0; j < clusters[i].size(); j++){
-            sumador += centroides.row(i); //<-paper "a modified..."
+            sumador += centroides.row(i); //<-paper 
             //sumador += matrizInicial.row(clusters[i][j]);
             }
         this->centroides.row(i) = sumador / sumador.norm();
