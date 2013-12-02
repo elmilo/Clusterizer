@@ -25,6 +25,7 @@ private:
 
 	//Guarda las palabras nuevamente... pensar si no conviene usar el diccionario en vez
 	vector<Nodo> palabras;
+	vector<Nodo> palabrasDeDisco;
 
 	//Diccionario para encontrar las palabras. HAY QUE SACAR ESTA POROG
 	Diccionario* miDiccionario;
@@ -46,6 +47,8 @@ public:
 	void procesarDocumentos();
 	
 	TipoMatriz getMatriz() const;
+	/*void haciaDisco();
+	void desdeDisco();*/
 };
 
 #endif /* VECTORSPACEMODEL_H_ */

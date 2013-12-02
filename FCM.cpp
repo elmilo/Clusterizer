@@ -19,7 +19,7 @@ FCM::FCM(const TipoMatriz& matriz, int n_clusters):
         this->Normalizar(this->matrizInicial, cantVectores);
     };
 
-kMeans::kMeans(const TipoMatriz& matriz){
+FCM::FCM(const TipoMatriz& matriz){
         TOLERANCIA = 1e-10;
         MSHIP_PARAM = 0.58;
         this->matrizInicial = matriz;

@@ -33,8 +33,8 @@ public:
 	string popDocumento(unsigned unaPos);
 
 	unsigned cantidadDocIDs();
-    void haciaDisco();
-    void desdeDisco();
+    /*void haciaDisco();
+    void desdeDisco();*/
 	
 
 private:

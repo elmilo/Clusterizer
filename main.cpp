@@ -27,7 +27,7 @@ Lista los grupos o categorías existentes y los documentos dentro de cada grupo 
 TpGrupo13 -a datos/books/alice_in_wonderland
 Agrega y clasifica el texto pasado como parametro e indica a que grupo lo ha agregado (a partir de aqui
 debería aparecer al listad con -l o -g)*/
-
+/*
 void guardarOpciones(std::string opcionF, int cantClusters){
     std::ofstream salida ("opcionesGeneral");
     salida <<opcionF;
@@ -168,7 +168,7 @@ int main( int argc, char** argv )
     }
   
 
-
+*/
 
 
 
@@ -186,7 +186,7 @@ int main( int argc, char** argv )
 int main(int argc, char **argv){
     int cantClusters = 8;
     
-    //string directorio="otrostextos/textosingles";
+    string directorio="otrostextos/textosingles";
     //string directorio="textos";
 
 
@@ -210,23 +210,22 @@ int main(int argc, char **argv){
     vecSpaceModel.procesarDocumentos();
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
     
-    /*FCM clusterizando(matrizVecSpace, cantClusters);
-
+    /** Clustering rigido y cant clusters definidos */
+    //kMeans clusterizando(matrizVecSpace, cantClusters);
+    //clusterizando.runner();
+    
+    /** Clustering fuzzy y cant clusters definidos */
+    FCM clusterizando(matrizVecSpace, cantClusters);
     clusterizando.runner();
 
-    for (int cluster=0; cluster<cantClusters; cluster++){
-        std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
-        std::cout << "Grupo: " << cluster+1 << std::endl;
-        std::cout << "("<< documentos.size() << " elementos)"<< std::endl;
-        for (unsigned r = 0; r < documentos.size() ; r++){
-            std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
-            }
-        std::cout << std::endl;
-    }*/
+    /** Rigido y propone K */
+    //kMeans clusterizando(matrizVecSpace);
+    //cantClusters = clusterizando.proponerK();
     
-    kMeans clusterizando(matrizVecSpace);
-
-    //clusterizando.runner();
+    /** Fuzzy y propone K */
+    //FCM clusterizando(matrizVecSpace);
+    //cantClusters = clusterizando.proponerK();
+    
     
     std::cout << "El k optimo: " <<  cantClusters << std::endl;
     

@@ -99,3 +99,52 @@ int VectorSpaceModel::bbinaria(const std::string unaPalabra){
     }
     return -1;
 }
+
+/*
+void VectorSpaceModel::haciaDisco(){
+ofstream data_file("dic.dat", std::ios::binary);
+const unsigned int maxPalabra=16;
+mapaDelDiccionario::iterator externo;
+float idf;
+
+ unsigned char * buf_ptr = new unsigned char [16];
+  unsigned char * buf_grabar=buf_ptr;
+        
+  for (externo=miDiccionario->diccionario.begin(); externo!=miDiccionario->diccionario.end(); externo++){
+         fill_n(buf_ptr, 16,0);
+         idf=log10((TipoGuardado)cantDocs / (TipoGuardado)externo->second.size());
+         //externo->first es una palabra
+        strncpy((char *) buf_ptr, externo->first.c_str(), maxPalabra);
+                data_file.write((char *)&idf, 4);
+        data_file.write((char *) buf_grabar, 16);
+        }
+    data_file.close();
+    delete [] buf_ptr;
+        }
+
+
+void VectorSpaceModel::desdeDisco(){
+                        char * buf_ptr = new char [16];
+                        vector<Nodo> vecDic;
+                        ifstream in("dic.dat", ios::in | ios::binary);
+                        Nodo nodo;
+                        in.read((char*)&nodo.idf,4);
+            in.read(buf_ptr,16);                        
+        while(!in.eof()){
+            nodo.token = string((char *) buf_ptr);
+                        vecDic.push_back(nodo);
+                        in.read((char*)&nodo.idf,4);
+            in.read(buf_ptr,16);                
+            }
+           palabrasDeDisco=vecDic;
+}*/
+
+  /* ejemplo prueba
+nodo=vecDic[0];
+cout<<nodo.idf<<endl;
+cout<<nodo.token<<endl;
+cout<<nodo.token.size()<<endl;
+nodo=vecDic[1];
+cout<<nodo.idf<<endl;
+cout<<nodo.token<<endl;
+*/

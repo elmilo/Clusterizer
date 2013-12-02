@@ -66,8 +66,10 @@ private:
     TipoGuardado getMaximo(TipoVectorFila vector) const;
     
 public:
-    
+    int proponerK(int maximosClusters = 32);
+        
     FCM(const TipoMatriz& matriz, int n_clusters);
+    FCM(const TipoMatriz& matriz);
   
     ~FCM();
     
