@@ -119,3 +119,23 @@ void Loader::listarArchivos(const char* unDirectorio, string extension = "") {
 		closedir(pDIR);
 	}
 }
+
+void Loader::haciaDisco(){
+    std::ofstream salida ("ListadoDeArchivos");
+    for (int i=0; i<this->cantidadDocIDs(); i++)
+        salida << this->popDocumento(i);
+    salida.close();
+}
+
+void Loader::desdeDisco(){
+    datosArchivos addendum;
+    addendum.nombreArchivo = "";
+    addendum.tamanioArchivo = -1;
+    std::ifstream entrada ("ListadoDeArchivos");
+    while(entrada>>linea){
+        addendum.nombreArchivo = linea;
+        direcciones.push_back(addendum);
+        }
+    entrada.close();
+    return true;
+}

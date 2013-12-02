@@ -12,7 +12,7 @@
 #include <vector>
 #include "TiposGlobales.h"
 
-TpGrupo13 -d datos/books -c 14 -o Y/N
+/*TpGrupo13 -d datos/books -c 14 -o Y/N
 -d indica el path a donde están almacenados los documentos
 -c indica la cantidad de categorias a crear, si no se indica -c el TP debe decidir automaticamente cual es
 el número de clusters a generar de acuerdo a su entendimiento de los datos.
@@ -26,7 +26,26 @@ Lista los grupos o categorías existentes y los documentos dentro de cada grupo 
 
 TpGrupo13 -a datos/books/alice_in_wonderland
 Agrega y clasifica el texto pasado como parametro e indica a que grupo lo ha agregado (a partir de aqui
-debería aparecer al listad con -l o -g)
+debería aparecer al listad con -l o -g)*/
+
+void guardarOpciones(std::string opcionF, int cantClusters){
+    std::ofstream salida ("opcionesGeneral");
+    salida <<opcionF;
+    salida <<cantClusters;
+    salida.close();
+    return true;
+}
+
+void cargarOpciones(std::string& opcionF, int& cantClusters){
+    std::ifstream entrada ("opcionesGeneral");
+    cantClusters=-1;
+    entrada >> opcionF;
+    entrada >> cantClusters;
+    entrada.close();
+    return true;
+}
+
+
 
 TipoMatriz cargarDiccionario(std::string directorio) const{
     Loader archivosCargados(directorio, "");
@@ -45,6 +64,9 @@ TipoMatriz cargarDiccionario(std::string directorio) const{
     VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
     //genera toda la coleccion de vectores de pesos
     vecSpaceModel.procesarDocumentos();
+
+    vecSpaceModel.haciaDisco();
+    archivosCargados.haciaDisco();
 
     delete miDiccionario;
     return vecSpaceModel.getMatriz();
@@ -70,6 +92,7 @@ int main( int argc, char** argv )
                 kMeans clusterizando(cargarDiccionario(directorio));
                 cantClusters = clusterizando.proponerK();
                 }
+            guardarOpciones(opcionFuzzy,-1);
         }
     }
 
@@ -85,16 +108,60 @@ int main( int argc, char** argv )
                 kMeans clusterizando(cargarDiccionario(directorio),cantClusters);
                 clusterizando.runner();
                 }
+            guardarOpciones(opcionFuzzy, cantClusters);
         }
     }
     
     if (argc==2){
         if( argv[1]=="-l"){
             //listar documentos
+            Loader archivosCargados();
+            archivosCargados.desdeDisco();
+            unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
+            for (unsigned r = 0; r < cantidadIDs ; r++){
+                std::cout << archivosCargados.popDocumento(r) << std::endl;
+                }
             }
         if( argv[1]=="-g"){
             //listar documentos y clusters
+            VectorSpaceModel vecSpaceModel();
+            vecSpaceModel.desdeDisco();
+            matrizVecSpace = vecSpaceModel.getMatriz();
+
+            Loader archivosCargados();
+            archivosCargados.desdeDisco();
+            unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
+            
+            opcionFuzzy = "N";
+
+            cargarOpciones(opcionFuzzy, cantClusters);
+            if (opcionFuzzy=="Y"){
+                if (cantClusters == -1){
+                    FCM clusterizando.desdeDisco();
+                    cantClusters = clusterizando.proponerK();
+                    }else{
+                        FCM clusterizando.desdeDisco();
+                        }
+            }else{
+                if (cantClusters == -1){
+                    kMeans clusterizando.desdeDisco();
+                    cantClusters = clusterizando.proponerK();
+                    }else{
+                        kMeans clusterizando.desdeDisco();
+                        }
+
+            for (int cluster=0; cluster<cantClusters; cluster++){
+                std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
+                std::cout << "Grupo: " << cluster+1 << std::endl;
+                std::cout << "("<< documentos.size() << " elementos)"<< std::endl;
+                    for (unsigned r = 0; r < documentos.size() ; r++){
+                        std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
+                    }
+                std::cout << std::endl;
+                }
             }
+            }
+
         if( argv[1]=="-a"){
             //buscar a donde pertence un documento
             }
@@ -119,9 +186,9 @@ int main( int argc, char** argv )
 int main(int argc, char **argv){
     int cantClusters = 8;
     
-//    string directorio="otrostextos/textosingles";
+    //string directorio="otrostextos/textosingles";
     //string directorio="textos";
-    string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
+
 
     Loader archivosCargados(directorio, "");
     unsigned cantidadIDs = archivosCargados.cantidadDocIDs();
