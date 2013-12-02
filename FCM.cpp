@@ -1,4 +1,4 @@
-#include "kMeans.h"
+#include "FCM.h"
 
 kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
@@ -6,6 +6,9 @@ kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
         this->matrizInicial = matriz;
         cantElementos = static_cast<unsigned>(matriz.cols());
         cantVectores = static_cast<int>(matriz.rows());
+        //Use the estimated means to find the degree of membership u(j,i) of xj in Cluster i;
+        this->LimpiarMatriz(this->gradoDeMembresia, cantClusters, cantVectores);
+        gradoDeMembresia.setRandom();
         clusters.resize(cantClusters);
         //Normalizacion de la matriz (variante)
         this->Normalizar(this->matrizInicial, cantVectores);
@@ -181,3 +184,5 @@ void kMeans::Normalizar(TipoMatriz& unaMatriz, int tamanio){
         unaMatriz.row(i) = vector;
         }
 }
+
+

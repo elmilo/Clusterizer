@@ -1,5 +1,5 @@
-#ifndef KMEANS_H
-#define KMEANS_H
+#ifndef FCM_H
+#define FCM_H
 
 #include <limits>
 #include <vector>
@@ -14,7 +14,7 @@
 * 
 * */
 
-class kMeans {
+class FCM {
 private:
     TipoGuardado TOLERANCIA;
     
@@ -24,6 +24,9 @@ private:
 
     TipoMatriz matrizInicial; // guarda la matriz de datos
     
+    //grado de membresia (i,j) del vector xj en el cluster i;
+    TipoMatriz gradoDeMembresia; 
+
     TipoMatriz centroides; // cada fila es el centroide del cluster
     TipoMatriz nuevosCentroides; // idem
     

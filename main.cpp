@@ -12,6 +12,7 @@
 #include "TiposGlobales.h"
 
 int main(int argc, char **argv){
+    int cantClusters = 6;
     
     string directorio="otrostextos/textosingles";
     //string directorio="textos";
@@ -30,15 +31,11 @@ int main(int argc, char **argv){
         }
     }
 
-
     //inicializa vector space model
     VectorSpaceModel vecSpaceModel(miDiccionario, cantidadIDs);
 
     //genera toda la coleccion de vectores de pesos
     vecSpaceModel.procesarDocumentos();
-    
-    int cantClusters = 8;
-    
     TipoMatriz matrizVecSpace = vecSpaceModel.getMatriz();
     kMeans clusterizando(matrizVecSpace, cantClusters);
 
@@ -46,24 +43,13 @@ int main(int argc, char **argv){
 
     for (int cluster=0; cluster<cantClusters; cluster++){
         std::vector<int> documentos = clusterizando.mostrarUnDato(cluster);
-        std::cout << "Grupo: " << cluster+1 << " ("<< documentos.size() << " elementos)"<< std::endl;
+        std::cout << "Grupo: " << cluster+1 << std::endl;
+        std::cout << "("<< documentos.size() << " elementos)"<< std::endl;
         for (unsigned r = 0; r < documentos.size() ; r++){
             std::cout << archivosCargados.popDocumento(documentos[r]) << std::endl;
             }
         std::cout << std::endl;
         }
-      
-      /*for (unsigned r = 0; r < cantidadIDs; r++){
-        std::cout << "docID: " << r << " es:  " 
-                            << archivosCargados.popDocumento(r) << std::endl;
-        std::cout << "Pertenece al cluster: " 
-                << clusterizando.calcularPuntoMasCercano (matrizVecSpace.row(r)) << std::endl;
-        std::cout << std::endl;
-        }*/
-
-    //clusterizando.imprimirPuntosClusters();
-    //cout << "***********************------------------************************* \n\n" << endl;
-
 
     delete miDiccionario;
 
