@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 #include <cmath> 
+#include <math.h>
 #include <iostream>
 #include <random>
 
@@ -17,15 +18,22 @@
 class FCM {
 private:
     TipoGuardado TOLERANCIA;
+    //TipoGuardado fuzzyness; //"m" en los papers, mayor a 1
     
     int cantElementos; //Dimension (cantidad de palabras por ejemplo)
     int cantClusters; // cantidad de clusters que se quieren armar
     int cantVectores; // cantidad de elementos clusterizables (documentos por ejemplo)
-
+    
+    std::vector<int> asignaciones;
+    
+    /*int iteracion; 
+    int maxIteraciones;*/
+    
     TipoMatriz matrizInicial; // guarda la matriz de datos
     
     //grado de membresia (i,j) del vector xj en el cluster i;
-    TipoMatriz gradoDeMembresia; 
+    TipoMatriz gradoDeMembresia;
+
 
     TipoMatriz centroides; // cada fila es el centroide del cluster
     TipoMatriz nuevosCentroides; // idem
@@ -47,21 +55,21 @@ private:
     //Procedimiento apra recalcular centroides, aca se puede utilizar otros algoritmos
     void actualizarCentroides();
     
-    kMeans(); //No se puede
+    FCM(); //No se puede
     
     void Inicializacion();
 public:
 
-    kMeans(const TipoMatriz& matriz, int n_clusters);
+    FCM(const TipoMatriz& matriz, int n_clusters);
   
-    ~kMeans();
+    ~FCM();
   
     // calcular cual centroide es el mas cercano a un punto
     int calcularPuntoMasCercano(const TipoVectorFila& unPunto) const;
     
     std::vector<int> mostrarUnDato(int i) const;
         
-    void runner2();
+    void runner();
 };
 
-#endif // KMEANS_H
+#endif //FCM_H

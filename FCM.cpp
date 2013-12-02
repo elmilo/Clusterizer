@@ -1,24 +1,30 @@
 #include "FCM.h"
 
-kMeans::kMeans(const TipoMatriz& matriz, int n_clusters):
+FCM::FCM(const TipoMatriz& matriz, int n_clusters):
     cantClusters(n_clusters){
         TOLERANCIA = 1e-10;
+        fuzzyness = 1.5;
+        
         this->matrizInicial = matriz;
+        
         cantElementos = static_cast<unsigned>(matriz.cols());
         cantVectores = static_cast<int>(matriz.rows());
+        
         //Use the estimated means to find the degree of membership u(j,i) of xj in Cluster i;
-        this->LimpiarMatriz(this->gradoDeMembresia, cantClusters, cantVectores);
+        this->LimpiarMatriz(this->gradoDeMembresia, cantVectores, cantClusters);
+        
         gradoDeMembresia.setRandom();
         clusters.resize(cantClusters);
-        //Normalizacion de la matriz (variante)
+        
+        //Normalizacion de la matriz inicial (variante)
         this->Normalizar(this->matrizInicial, cantVectores);
     };
 
-kMeans::kMeans() {};
+FCM::FCM() {};
 
-kMeans::~kMeans() {};
+FCM::~FCM() {};
 
-void kMeans::Randomize(TipoMatriz& matrizCentroides){
+void FCM::Randomize(TipoMatriz& matrizCentroides){
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, cantVectores-1);
@@ -28,36 +34,14 @@ void kMeans::Randomize(TipoMatriz& matrizCentroides){
         }
 }
 
-void kMeans::Inicializacion(){
+void FCM::Inicializacion(){
     this->LimpiarMatriz(this->centroides,cantClusters, cantElementos);
     this->LimpiarMatriz(this->nuevosCentroides,cantClusters, cantElementos);
     this->Randomize(this->centroides);
 }
 
 
-//Euclidea
-/*
- * NO ES LA MEJOR PARA DOCUMENTOS
- * */
-/*int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
-    TipoVectorColumna normas((centroides - unPunto.replicate(cantClusters, 1)).rowwise().norm());
-
-    //le doy un valor muy alto
-    TipoGuardado min_dist = std::numeric_limits<TipoGuardado>::max(); 
-    
-    int masCercano = -1;//std::numeric_limits<int>::min();
-    for (int m = 0; m < cantClusters; m++) {
-        if (normas(m) < min_dist) {
-            min_dist = normas(m);
-            masCercano = m;
-        }
-    }
-    
-    return masCercano;
-}*/
-
-
-int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
+int FCM::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
     TipoVectorColumna normas;
     normas.resize(cantClusters);
 
@@ -78,7 +62,7 @@ int kMeans::calcularPuntoMasCercano(const TipoVectorFila& unPunto) const {
 }
 
 //Coseno
-TipoGuardado kMeans::CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const{
+TipoGuardado FCM::CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vecB) const{
     TipoGuardado producto = vecA.dot(vecB);
     
     TipoGuardado normaA = vecA.norm();
@@ -89,12 +73,12 @@ TipoGuardado kMeans::CalcularSimilaridad(TipoVectorFila vecA, TipoVectorFila vec
 }
 
 
-void kMeans::LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas){
+void FCM::LimpiarMatriz(TipoMatriz& unaMatriz, int filas, int columnas){
     unaMatriz = TipoMatriz::Zero(filas, columnas);
 }
 
 
-void kMeans::runner2() {
+void FCM::runner2() {
     
     this->Inicializacion();
     this->LimpiarMatriz(nuevosCentroides, cantClusters, cantElementos);
@@ -147,7 +131,7 @@ void kMeans::runner2() {
 /*Esto es el algoritmo comun:*/    
 /*suma += matrizInicial(clusters[i][j], d);
     this->centroides(i,d) = suma / (TipoGuardado)clusters[i].size();*/
-void kMeans::actualizarCentroides() {
+void FCM::actualizarCentroides() {
     for (int i = 0; i < cantClusters; i++) {
         TipoVectorFila sumador;
         sumador.resize(cantElementos);
@@ -169,7 +153,7 @@ void kMeans::actualizarCentroides() {
 }
 
 
-std::vector<int> kMeans::mostrarUnDato(int i) const{
+std::vector<int> FCM::mostrarUnDato(int i) const{
     return clusters[i];
 }
 
@@ -177,7 +161,7 @@ std::vector<int> kMeans::mostrarUnDato(int i) const{
 /*
  * Experimental: normalizacion
  * */
-void kMeans::Normalizar(TipoMatriz& unaMatriz, int tamanio){
+void FCM::Normalizar(TipoMatriz& unaMatriz, int tamanio){
     for (int i = 0; i< tamanio; i++){
         TipoVectorFila vector = unaMatriz.row(i);
         vector.normalize();
@@ -186,3 +170,46 @@ void kMeans::Normalizar(TipoMatriz& unaMatriz, int tamanio){
 }
 
 
+void FCM::runner() {
+
+    TipoMatriz temporal;
+    this->LimpiarMatriz(temporal, cantVectores, cantClusters);
+    bool bandera = true;
+    TipoGuardado suma = 0;
+
+    while (!bandera){
+        for (int i = 0; i < cantVectores; i++)
+            for (int j = 0; j < cantClusters; j++){
+                TipoVectorFila unVector;
+                unVector = matrizInicial.row(i) - centroides.row(j);
+                temporal(i,j) = exp(- (unVector.squaredNorm()));
+                }
+        
+        for (int i = 0; i < cantVectores; i++){
+            TipoGuardado suma = 0
+            for (int j = 0; j < cantClusters; j++)
+                suma += temporal(i,j);
+            gradoDeMembresia.row(i) = temporal.row(i)/suma;
+            }
+            
+        for (int i = 0; i < cantClusters; i++)
+            for (int j = 0; j < cantVectores; j++){
+            TipoVectorFila unVector = gradoDeMembresia.row(i);
+            TipoGuardado norma22 = unVector.squaredNorm(); //Cuadrado de la norma
+            centroides.row(i) = norma22 * matrizInicial.row(j);
+            centroides.row(i) /= norma22;
+            }
+
+        nuevosCentroides = centroides;
+        this->actualizarCentroides();
+
+        suma = 0;
+        for (int i = 0; i < cantClusters; i++)
+            for (int j = 0; j < cantElementos; j++)
+                suma += nuevosCentroides(i,j) - centroides(i,j);
+
+        if (abs(suma) < TOLERANCIA) //Condicion de corte
+                bandera = false;
+    }
+    std::cout << gradoDeMembresia << std::endl;
+}

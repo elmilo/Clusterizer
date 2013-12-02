@@ -14,8 +14,8 @@
 int main(int argc, char **argv){
     int cantClusters = 6;
     
-    string directorio="otrostextos/textosingles";
-    //string directorio="textos";
+    //string directorio="otrostextos/textosingles";
+    string directorio="textos";
     //string directorio="/home/emilio/Descargas/Clusterizer-eigen3/textos";
 
     Loader archivosCargados(directorio, "");
